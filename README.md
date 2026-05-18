@@ -91,7 +91,7 @@ This creates the SQLite database and seeds it with:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The admin panel is at [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+Open [http://localhost:3001](http://localhost:3001). The admin panel is at [http://localhost:3001/cms/login](http://localhost:3001/cms/login).
 
 ## Scripts
 
