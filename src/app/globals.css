@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-primary: #256b12;
+  --color-primary-dark: #1a4d0c;
+  --color-primary-light: #f0f7ec;
+  --color-accent: #d97706;
+  --color-accent-dark: #b25c03;
+}
