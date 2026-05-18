@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   {
     label: "Dashboard",
-    href: "/admin",
+    href: "/cms",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -15,7 +15,7 @@ const navItems = [
   },
   {
     label: "Articles",
-    href: "/admin/articles",
+    href: "/cms/articles",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
@@ -24,7 +24,7 @@ const navItems = [
   },
   {
     label: "New Article",
-    href: "/admin/articles/new",
+    href: "/cms/articles/new",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -33,7 +33,7 @@ const navItems = [
   },
   {
     label: "Categories",
-    href: "/admin/categories",
+    href: "/cms/categories",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -45,7 +45,7 @@ const navItems = [
 const adminNavItems = [
   {
     label: "Ads",
-    href: "/admin/ads",
+    href: "/cms/ads",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
@@ -55,7 +55,7 @@ const adminNavItems = [
   },
   {
     label: "Users",
-    href: "/admin/users",
+    href: "/cms/users",
     icon: (
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
@@ -74,7 +74,7 @@ export default function AdminSidebar({
   const pathname = usePathname();
 
   function isActive(href: string) {
-    if (href === "/admin") return pathname === "/admin";
+    if (href === "/cms") return pathname === "/cms";
     return pathname.startsWith(href);
   }
 
@@ -85,7 +85,7 @@ export default function AdminSidebar({
 
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-zinc-100">
-        <Link href="/admin" className="flex items-center gap-3 group">
+        <Link href="/cms" className="flex items-center gap-3 group">
           <div className="relative">
             <img src="/logo.png" alt="Ezrafmonline" className="h-7 w-auto" />
           </div>

@@ -18,7 +18,7 @@ export default async function AdminArticlesPage() {
           </p>
         </div>
         <Link
-          href="/admin/articles/new"
+          href="/cms/articles/new"
           className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-dark transition-colors shadow-xs"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -69,7 +69,7 @@ export default async function AdminArticlesPage() {
                       )}
                       <div className="min-w-0">
                         <Link
-                          href={`/admin/articles/${article.id}/edit`}
+                          href={`/cms/articles/${article.id}/edit`}
                           className="font-medium text-zinc-900 hover:text-primary transition-colors line-clamp-1"
                         >
                           {article.title}
@@ -116,7 +116,7 @@ export default async function AdminArticlesPage() {
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Link
-                        href={`/admin/articles/${article.id}/edit`}
+                        href={`/cms/articles/${article.id}/edit`}
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 hover:text-primary transition-colors px-3 py-1.5 rounded-lg hover:bg-zinc-100"
                       >
                         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

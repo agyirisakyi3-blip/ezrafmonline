@@ -11,7 +11,7 @@ export default async function AdminLayout({
   const session = await auth();
 
   if (!session?.user) {
-    redirect("/admin/login");
+    redirect("/cms/login");
   }
 
   const user = session.user as { name?: string; role?: string; id?: string };

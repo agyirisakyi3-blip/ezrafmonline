@@ -30,7 +30,7 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (url.pathname.startsWith("/admin")) return;
+  if (url.pathname.startsWith("/cms")) return;
 
   if (
     request.method !== "GET" ||

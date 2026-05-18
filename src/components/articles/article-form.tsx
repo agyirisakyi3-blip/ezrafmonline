@@ -108,7 +108,7 @@ export default function ArticleForm({
 
       if (!res.ok) throw new Error("Failed to save");
 
-      router.push("/admin/articles");
+      router.push("/cms/articles");
       router.refresh();
     } catch {
       alert("Failed to save article");

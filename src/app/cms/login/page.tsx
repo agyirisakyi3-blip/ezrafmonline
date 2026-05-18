@@ -45,7 +45,7 @@ export default function LoginPage() {
                 await signIn("credentials", {
                   email: formData.get("email"),
                   password: formData.get("password"),
-                  redirectTo: "/admin",
+                  redirectTo: "/cms",
                 });
               }}
               className="space-y-5"

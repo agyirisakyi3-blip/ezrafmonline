@@ -237,7 +237,7 @@ export default async function AdminDashboard() {
                     <span className="text-xs font-mono text-zinc-300 w-4 shrink-0">{(i + 1).toString().padStart(2, "0")}</span>
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/admin/articles/${a.slug}`}
+                        href={`/cms/articles/${a.slug}`}
                         className="text-sm text-zinc-700 hover:text-primary transition-colors line-clamp-1 font-medium"
                       >
                         {a.title}
@@ -267,7 +267,7 @@ export default async function AdminDashboard() {
             </div>
           </div>
           <Link
-            href="/admin/articles/new"
+            href="/cms/articles/new"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-md hover:from-primary-dark hover:to-primary-dark transition-all duration-200"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -296,7 +296,7 @@ export default async function AdminDashboard() {
                 )}
                 <div className="min-w-0">
                   <Link
-                    href={`/admin/articles/${article.id}/edit`}
+                    href={`/cms/articles/${article.id}/edit`}
                     className="font-medium text-zinc-900 hover:text-primary transition-colors text-sm line-clamp-1"
                   >
                     {article.title}
@@ -333,7 +333,7 @@ export default async function AdminDashboard() {
                 </div>
               </div>
               <Link
-                href={`/admin/articles/${article.id}/edit`}
+                href={`/cms/articles/${article.id}/edit`}
                 className="opacity-0 group-hover/item:opacity-100 text-xs font-medium text-primary hover:text-primary-dark transition-all shrink-0 px-3 py-1.5 rounded-lg bg-primary-light/50 hover:bg-primary-light"
               >
                 Edit &rarr;
@@ -346,7 +346,7 @@ export default async function AdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
               <p className="text-zinc-400 text-sm mb-1">No articles yet</p>
-              <Link href="/admin/articles/new" className="text-primary text-sm font-medium hover:underline">
+              <Link href="/cms/articles/new" className="text-primary text-sm font-medium hover:underline">
                 Create your first article
               </Link>
             </div>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 export default function MetaPixel({ pixelId }: { pixelId: string }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/cms")) return null;
 
   return (
     <>

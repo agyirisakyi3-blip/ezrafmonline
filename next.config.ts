@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
       ],
     },
     {
-      source: "/((?!api|admin|_next/static|_next/image|favicon.ico|uploads).*)",
+      source: "/((?!api|cms|_next/static|_next/image|favicon.ico|uploads).*)",
       headers: [
         { key: "Cache-Control", value: "public, max-age=0, s-maxage=60, stale-while-revalidate=300" },
         { key: "X-Frame-Options", value: "DENY" },

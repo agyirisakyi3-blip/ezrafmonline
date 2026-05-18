@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 async function saveAdsenseSettings(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   const googleAdsenseId = (formData.get("googleAdsenseId") as string) || null;
 
@@ -17,13 +17,13 @@ async function saveAdsenseSettings(formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/admin/ads");
+  revalidatePath("/cms/ads");
 }
 
 async function saveMetaPixelSettings(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   const metaPixelId = (formData.get("metaPixelId") as string) || null;
 
@@ -34,13 +34,13 @@ async function saveMetaPixelSettings(formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/admin/ads");
+  revalidatePath("/cms/ads");
 }
 
 async function saveWeatherSettings(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   const weatherApiKey = (formData.get("weatherApiKey") as string) || null;
   const weatherCity = (formData.get("weatherCity") as string) || null;
@@ -52,7 +52,7 @@ async function saveWeatherSettings(formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/admin/ads");
+  revalidatePath("/cms/ads");
 }
 
 const POSITIONS = [
@@ -67,7 +67,7 @@ const POSITIONS = [
 async function createAd(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   await prisma.ad.create({
     data: {
@@ -84,24 +84,24 @@ async function createAd(formData: FormData) {
   });
 
   revalidatePath("/");
-  revalidatePath("/admin/ads");
-  redirect("/admin/ads");
+  revalidatePath("/cms/ads");
+  redirect("/cms/ads");
 }
 
 async function deleteAd(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   await prisma.ad.delete({ where: { id: formData.get("id") as string } });
   revalidatePath("/");
-  revalidatePath("/admin/ads");
+  revalidatePath("/cms/ads");
 }
 
 async function toggleAd(formData: FormData) {
   "use server";
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   const id = formData.get("id") as string;
   const current = await prisma.ad.findUnique({ where: { id } });
@@ -109,12 +109,12 @@ async function toggleAd(formData: FormData) {
     await prisma.ad.update({ where: { id }, data: { active: !current.active } });
   }
   revalidatePath("/");
-  revalidatePath("/admin/ads");
+  revalidatePath("/cms/ads");
 }
 
 export default async function AdminAdsPage() {
   const session = await auth();
-  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/admin");
+  if ((session?.user as { role?: string })?.role !== "ADMIN") redirect("/cms");
 
   const ads = await prisma.ad.findMany({
     orderBy: [{ position: "asc" }, { sortOrder: "asc" }],

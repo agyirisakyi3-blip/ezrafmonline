@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function GoogleAdsense({ publisherId }: { publisherId: string }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const isAdmin = pathname.startsWith("/cms");
 
   useEffect(() => {
     if (!isAdmin && (window as any).adsbygoogle) {

@@ -33,8 +33,8 @@ async function createUser(formData: FormData) {
     data: { name, email, password: hashedPassword, role },
   });
 
-  revalidatePath("/admin/users");
-  redirect("/admin/users");
+  revalidatePath("/cms/users");
+  redirect("/cms/users");
 }
 
 export default async function AdminUsersPage() {
@@ -43,7 +43,7 @@ export default async function AdminUsersPage() {
   const isAdmin = currentUser?.role === "ADMIN";
 
   if (!isAdmin) {
-    redirect("/admin");
+    redirect("/cms");
   }
 
   const users = await prisma.user.findMany({
