@@ -60,10 +60,24 @@ model Article {
   category        Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   authorId        String?
   author          User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  comments        Comment[]
 
   @@index([status, publishedAt(sort: Desc)])
   @@index([categoryId, status, publishedAt(sort: Desc)])
   @@index([isEditorPick, status, publishedAt(sort: Desc)])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String
+  authorName String
+  authorEmail String?
+  articleId  String
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([articleId, createdAt(sort: Desc)])
 }
 
 model SiteConfig {

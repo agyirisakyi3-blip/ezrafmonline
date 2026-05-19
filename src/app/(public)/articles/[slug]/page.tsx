@@ -11,6 +11,7 @@ import AdSlot from "@/components/ads/ad-slot";
 import TrackView from "@/components/track-view";
 import ShareButtons from "@/components/share-buttons";
 import NewsletterForm from "@/components/newsletter-form";
+import Comments from "@/components/comments";
 import {
   getPublishedArticleBySlug,
   getRelatedArticles,
@@ -172,6 +173,10 @@ export default async function ArticlePage({
               Get the latest news delivered to your inbox.
             </p>
             <NewsletterForm />
+          </div>
+
+          <div className="mt-10 pt-6 border-t border-zinc-200">
+            <Comments slug={article.slug} />
           </div>
         </article>
 
