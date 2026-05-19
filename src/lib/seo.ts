@@ -69,26 +69,45 @@ export function articleJsonLd({
   author?: string | null;
   category?: string | null;
 }) {
-  return {
+  const data: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: title,
     description,
     url,
-    ...(image && { image }),
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     datePublished: publishedAt.toISOString(),
     dateModified: updatedAt.toISOString(),
-    ...(author && {
-      author: { "@type": "Person", name: author },
-    }),
-    ...(category && { articleSection: category }),
+    inLanguage: "en",
+    isAccessibleForFree: true,
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_URL}/logo.png`,
-      },
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
     },
+  };
+  if (image) {
+    data.image = [image];
+  }
+  if (author) {
+    data.author = { "@type": "Person", name: author };
+  }
+  if (category) {
+    data.articleSection = category;
+  }
+  return data;
+}
+
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    sameAs: [
+      "https://facebook.com/ezrafmonline",
+      "https://twitter.com/ezrafmonline",
+    ],
   };
 }

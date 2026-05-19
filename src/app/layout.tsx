@@ -62,6 +62,10 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://openweathermap.org" />
+        <link rel="alternate" type="application/rss+xml" title="Ezrafmonline RSS" href="/rss.xml" />
+        <link rel="sitemap" type="application/xml" title="News Sitemap" href="/news-sitemap.xml" />
+        <meta name="geo.region" content="GH" />
+        <meta name="geo.placename" content="Ghana" />
         {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
           <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
         )}
