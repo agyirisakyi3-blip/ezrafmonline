@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
       where: { viewCount: { gt: 0 } },
       orderBy: { viewCount: "desc" },
       take: 5,
-      select: { title: true, slug: true, viewCount: true },
+      select: { id: true, title: true, slug: true, viewCount: true },
     }),
     prisma.dailyView.groupBy({
       by: ["date"],
@@ -243,7 +243,7 @@ export default async function AdminDashboard() {
               <h3 className="text-sm font-semibold text-zinc-900 mb-5">Most Viewed Articles</h3>
               <div className="space-y-4">
                 {mostViewed.map((a, i) => (
-                  <div key={a.slug} className="flex items-center gap-4">
+                  <div key={a.id} className="flex items-center gap-4">
                     <span className={`text-xs font-mono w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
                       i === 0 ? "bg-amber-100 text-amber-700 font-bold" :
                       i === 1 ? "bg-zinc-100 text-zinc-500 font-semibold" :
@@ -252,7 +252,7 @@ export default async function AdminDashboard() {
                     }`}>{i + 1}</span>
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/cms/articles/${a.slug}`}
+                        href={`/cms/articles/${a.id}/edit`}
                         className="text-sm text-zinc-700 hover:text-primary transition-colors line-clamp-1 font-medium"
                       >
                         {a.title}

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { HeroCard, TopStoryCard, GridCard, SidebarCard } from "@/components/articles/article-card";
 import { siteMetadata } from "@/lib/seo";
-import { getHomepageData } from "@/lib/queries";
+import { getHomepageData, getPopularArticles } from "@/lib/queries";
 import AdSlot from "@/components/ads/ad-slot";
 
 export const metadata: Metadata = siteMetadata({
@@ -22,9 +22,10 @@ async function getCategories() {
 }
 
 export default async function HomePage() {
-  const [{ articles, deeplyRead, editorPicks }, categories] = await Promise.all([
+  const [{ articles, deeplyRead, editorPicks }, categories, popularArticles] = await Promise.all([
     getHomepageData(),
     getCategories(),
+    getPopularArticles(3),
   ]);
 
   const featured = articles[0];
@@ -47,7 +48,7 @@ export default async function HomePage() {
     ).slice(0, 4);
   }
 
-  const mostViewedLeft = articles.slice(0, 3);
+  const mostViewedLeft = popularArticles;
   const deeplyReadMiddle = deeplyRead;
   const editorPicksRight = editorPicks.length > 0 ? editorPicks : articles.slice(3, 6);
 

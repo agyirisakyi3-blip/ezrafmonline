@@ -24,8 +24,8 @@ export default async function SearchPage({
         where: {
           status: "published",
           OR: [
-            { title: { contains: query } },
-            { excerpt: { contains: query } },
+            { title: { contains: query, mode: "insensitive" } },
+            { excerpt: { contains: query, mode: "insensitive" } },
           ],
         },
         include: { category: true, author: { select: { name: true } } },

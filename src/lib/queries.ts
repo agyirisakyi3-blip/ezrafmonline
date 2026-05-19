@@ -58,7 +58,7 @@ export const getPopularArticles = cache(async (take = 5) => {
   return prisma.article.findMany({
     where: { status: "published" },
     select: articleSelect,
-    orderBy: { publishedAt: "desc" },
+    orderBy: { viewCount: "desc" },
     take,
   });
 });
@@ -80,12 +80,12 @@ export const getDeeplyRead = cache(async (take = 5) => {
     LIMIT ${take}
   `;
   if (ids.length === 0) return [];
-  const articles = await prisma.article.findMany({
+  const rows = await prisma.article.findMany({
     where: { id: { in: ids.map((r) => r.id) } },
     select: articleSelect,
-    orderBy: { publishedAt: "desc" },
   });
-  return articles;
+  const order = ids.map((r) => r.id);
+  return rows.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 });
 
 export const getRelatedArticles = cache(async (categoryId: string, excludeId: string, take = 5) => {

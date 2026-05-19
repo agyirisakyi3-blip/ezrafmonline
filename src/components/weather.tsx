@@ -25,8 +25,10 @@ export default function WeatherWidget() {
         const res = await fetch("/api/weather");
         if (res.ok) {
           const data = await res.json();
-          if (!cancelled && data.temp != null) setWeather(data);
-          else setError(true);
+          if (!cancelled) {
+            if (data.temp != null) setWeather(data);
+            else setError(true);
+          }
         } else {
           if (!cancelled) setError(true);
         }

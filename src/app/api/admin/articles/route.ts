@@ -15,7 +15,7 @@ const articleSchema = z.object({
   isEditorPick: z.boolean().optional().default(false),
   seoTitle: z.string().max(500).optional().default(""),
   seoDescription: z.string().max(1000).optional().default(""),
-  categoryId: z.string().min(1),
+  categoryId: z.string().min(1).optional().default(""),
 });
 
 export async function POST(req: Request) {
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       isEditorPick: data.isEditorPick,
       seoTitle: data.seoTitle ? sanitizePlain(data.seoTitle) : "",
       seoDescription: data.seoDescription ? sanitizePlain(data.seoDescription) : "",
-      categoryId: data.categoryId,
+      categoryId: data.categoryId || null,
       authorId: userId,
       publishedAt: data.status === "published" ? new Date() : null,
     },
@@ -62,6 +62,7 @@ export async function POST(req: Request) {
 
   revalidatePath("/");
   revalidatePath("/articles");
+  revalidatePath(`/articles/${article.slug}`);
 
   return jsonResponse(article, { status: 201 });
 }

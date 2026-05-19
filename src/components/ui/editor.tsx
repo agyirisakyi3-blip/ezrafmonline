@@ -65,13 +65,16 @@ export default function Editor({
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        throw new Error(err?.error || `Upload failed (${res.status})`);
+      }
       const data = await res.json();
 
       const alt = window.prompt("Image description (alt text):");
       editor.chain().focus().setImage({ src: data.url, alt: alt || "" }).run();
-    } catch {
-      alert("Failed to upload image");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to upload image");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

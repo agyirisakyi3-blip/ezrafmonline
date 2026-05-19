@@ -56,9 +56,21 @@ export default function ArticleForm({
     if (!article) setSlug(generateSlug(value));
   };
 
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const MAX_SIZE = 5 * 1024 * 1024;
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert("Invalid file type. Allowed: JPEG, PNG, WebP, GIF");
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      alert("File too large. Maximum size is 5MB");
+      return;
+    }
 
     setUploading(true);
     const formData = new FormData();
@@ -69,11 +81,14 @@ export default function ArticleForm({
         method: "POST",
         body: formData,
       });
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        throw new Error(err?.error || `Upload failed (${res.status})`);
+      }
       const data = await res.json();
       setFeaturedImage(data.url);
-    } catch {
-      alert("Failed to upload image");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to upload image");
     } finally {
       setUploading(false);
     }

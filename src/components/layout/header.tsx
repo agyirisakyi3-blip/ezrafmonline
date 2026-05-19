@@ -26,14 +26,15 @@ export default function Header() {
   const [lastScroll, setLastScroll] = useState(0);
 
   useEffect(() => {
+    let lastY = 0;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           const y = window.scrollY;
           setScrolled(y > 60);
-          setHidden(y > 300 && y > lastScroll);
-          setLastScroll(y);
+          setHidden(y > 300 && y > lastY);
+          lastY = y;
           ticking = false;
         });
         ticking = true;
@@ -41,7 +42,7 @@ export default function Header() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScroll]);
+  }, []);
 
   return (
     <header

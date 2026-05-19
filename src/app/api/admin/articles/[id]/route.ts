@@ -15,7 +15,7 @@ const articleUpdateSchema = z.object({
   isEditorPick: z.boolean().optional(),
   seoTitle: z.string().max(500).optional().default(""),
   seoDescription: z.string().max(1000).optional().default(""),
-  categoryId: z.string().min(1),
+  categoryId: z.string().min(1).optional().default(""),
 });
 
 export async function PUT(
@@ -63,7 +63,7 @@ export async function PUT(
       isEditorPick: data.isEditorPick ?? undefined,
       seoTitle: data.seoTitle ? sanitizePlain(data.seoTitle) : "",
       seoDescription: data.seoDescription ? sanitizePlain(data.seoDescription) : "",
-      categoryId: data.categoryId,
+      categoryId: data.categoryId || null,
       publishedAt:
         data.status === "published" && !existing.publishedAt
           ? new Date()
