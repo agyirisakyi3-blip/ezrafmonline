@@ -31,6 +31,7 @@ export async function generateMetadata({
     path: `/articles/${article.slug}`,
     image: article.featuredImage,
     publishedAt: article.publishedAt,
+    updatedAt: article.updatedAt,
     author: article.author?.name,
   });
 }

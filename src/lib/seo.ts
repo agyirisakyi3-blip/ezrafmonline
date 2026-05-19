@@ -8,6 +8,7 @@ export function siteMetadata({
   path = "",
   image,
   publishedAt,
+  updatedAt,
   author,
 }: {
   title: string;
@@ -15,6 +16,7 @@ export function siteMetadata({
   path?: string;
   image?: string | null;
   publishedAt?: Date | null;
+  updatedAt?: Date | null;
   author?: string | null;
 }) {
   const url = `${SITE_URL}${path}`;
@@ -30,7 +32,10 @@ export function siteMetadata({
       url,
       siteName: SITE_NAME,
       type: (publishedAt ? "article" : "website") as "article" | "website",
-      ...(publishedAt && { publishedTime: publishedAt.toISOString() }),
+      ...(publishedAt && {
+        publishedTime: publishedAt.toISOString(),
+        modifiedTime: (updatedAt || publishedAt).toISOString(),
+      }),
       ...(author && { authors: [author] }),
       ...(image && {
         images: [{ url: image, width: 1200, height: 630 }],

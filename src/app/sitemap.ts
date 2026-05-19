@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 
+const SITE_URL = process.env.AUTH_URL || "https://ezrafmonline.com";
+
 export default async function sitemap() {
   const articles = await prisma.article.findMany({
     where: { status: "published" },
-    select: { slug: true, updatedAt: true },
+    select: { slug: true, updatedAt: true, publishedAt: true },
   });
 
   const categories = await prisma.category.findMany({
@@ -12,25 +14,25 @@ export default async function sitemap() {
 
   return [
     {
-      url: "https://newsportal.com",
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 1,
     },
     {
-      url: "https://newsportal.com/articles",
+      url: `${SITE_URL}/articles`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.8,
     },
     ...articles.map((article) => ({
-      url: `https://newsportal.com/articles/${article.slug}`,
+      url: `${SITE_URL}/articles/${article.slug}`,
       lastModified: article.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
     })),
     ...categories.map((category) => ({
-      url: `https://newsportal.com/categories/${category.slug}`,
+      url: `${SITE_URL}/categories/${category.slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.5,
