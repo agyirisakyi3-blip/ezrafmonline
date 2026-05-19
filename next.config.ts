@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-  serverExternalPackages: ["bcryptjs"],
+  serverExternalPackages: ["bcryptjs", "pg"],
 };
 
 export default nextConfig;
