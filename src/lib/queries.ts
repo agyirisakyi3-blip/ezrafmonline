@@ -17,6 +17,17 @@ const articleSelect = {
   category: { select: { name: true, slug: true } },
 } satisfies Prisma.ArticleSelect;
 
+const articleListSelect = {
+  id: true,
+  title: true,
+  slug: true,
+  excerpt: true,
+  featuredImage: true,
+  publishedAt: true,
+  category: { select: { name: true, slug: true } },
+  author: { select: { name: true } },
+} satisfies Prisma.ArticleSelect;
+
 
 export type CachedArticle = Prisma.ArticleGetPayload<{
   include: typeof articleInclude;
@@ -32,7 +43,7 @@ export const getPublishedArticleBySlug = cache(async (slug: string) => {
 export const getPublishedArticles = cache(async (take?: number) => {
   return prisma.article.findMany({
     where: { status: "published" },
-    include: articleInclude,
+    select: articleListSelect,
     orderBy: { publishedAt: "desc" },
     ...(take ? { take } : {}),
   });
@@ -41,7 +52,7 @@ export const getPublishedArticles = cache(async (take?: number) => {
 export const getArticlesByCategory = cache(async (slug: string) => {
   return prisma.article.findMany({
     where: { status: "published", category: { slug } },
-    include: articleInclude,
+    select: articleListSelect,
     orderBy: { publishedAt: "desc" },
   });
 });
@@ -91,7 +102,7 @@ export const getDeeplyRead = cache(async (take = 5) => {
 export const getRelatedArticles = cache(async (categoryId: string, excludeId: string, take = 5) => {
   return prisma.article.findMany({
     where: { status: "published", categoryId, id: { not: excludeId } },
-    include: articleInclude,
+    select: articleListSelect,
     orderBy: { publishedAt: "desc" },
     take,
   });
@@ -100,7 +111,7 @@ export const getRelatedArticles = cache(async (categoryId: string, excludeId: st
 export const getLatestArticles = cache(async (excludeId: string, take = 5) => {
   return prisma.article.findMany({
     where: { status: "published", id: { not: excludeId } },
-    include: articleInclude,
+    select: articleListSelect,
     orderBy: { publishedAt: "desc" },
     take,
   });
@@ -111,7 +122,7 @@ export const getHomepageData = cache(async () => {
     where: { status: "published" },
     orderBy: { publishedAt: "desc" },
     take: 30,
-    include: { category: true, author: { select: { name: true } } },
+    select: articleListSelect,
   });
   const deeplyRead = await getDeeplyRead(5);
   const editorPicks = await getEditorPicks(6);

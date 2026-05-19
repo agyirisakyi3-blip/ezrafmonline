@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 function getDateRange(daysAgo: number) {
   const d = new Date();
   d.setDate(d.getDate() - daysAgo);

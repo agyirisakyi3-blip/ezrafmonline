@@ -23,7 +23,7 @@ export default function DateTimeDisplay() {
 
   useEffect(() => {
     setDateTime(new Date());
-    const id = setInterval(() => setDateTime(new Date()), 1000);
+    const id = setInterval(() => setDateTime(new Date()), 30_000);
     return () => clearInterval(id);
   }, []);
 

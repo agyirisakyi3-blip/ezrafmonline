@@ -23,7 +23,6 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
 
   useEffect(() => {
     let lastY = 0;
