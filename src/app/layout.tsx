@@ -6,6 +6,7 @@ import GoogleAdsense from "@/components/ads/google-adsense";
 import MetaPixel from "@/components/ads/meta-pixel";
 import Analytics from "@/components/analytics";
 import ServiceWorkerRegister from "@/components/service-worker-register";
+import ThemeProvider from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,8 +70,10 @@ export default async function RootLayout({
           <MetaPixel pixelId={config.metaPixelId} />
         )}
       </head>
-      <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased">
-        {children}
+      <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Analytics />
         <ServiceWorkerRegister />
       </body>

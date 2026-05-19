@@ -8,6 +8,7 @@ interface Article {
   excerpt: string | null;
   featuredImage: string | null;
   publishedAt: Date | null;
+  viewCount?: number;
   category?: { name: string; slug: string } | null;
   author?: { name: string } | null;
 }
@@ -41,6 +42,11 @@ export function HeroCard({ article }: { article: Article }) {
           <p className="hidden md:block text-sm text-white/70 line-clamp-2 max-w-2xl">
             {article.excerpt}
           </p>
+          <div className="hidden md:flex items-center gap-3 mt-2 text-xs text-white/50">
+            {article.viewCount !== undefined && (
+              <span>{article.viewCount.toLocaleString()} views</span>
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -67,6 +73,9 @@ export function TopStoryCard({ article }: { article: Article }) {
         <h3 className="text-sm font-semibold text-zinc-900 line-clamp-3 group-hover:text-primary transition-colors duration-300">
           {article.title}
         </h3>
+        {article.viewCount !== undefined && (
+          <p className="mt-0.5 text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
+        )}
       </div>
     </Link>
   );
@@ -100,6 +109,9 @@ export function GridCard({ article }: { article: Article }) {
         <h3 className="font-semibold text-zinc-900 line-clamp-4 text-sm group-hover:text-primary transition-colors duration-300">
           {article.title}
         </h3>
+        {article.viewCount !== undefined && (
+          <p className="mt-1 text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
+        )}
       </div>
     </Link>
   );
@@ -127,6 +139,9 @@ export function SidebarCard({
           <span className="mt-0.5 inline-block text-[10px] font-semibold uppercase tracking-wider text-primary">
             {article.category.name}
           </span>
+        )}
+        {article.viewCount !== undefined && (
+          <p className="text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
         )}
       </div>
       <div className="relative w-20 h-16 shrink-0 overflow-hidden rounded-sm bg-zinc-100">

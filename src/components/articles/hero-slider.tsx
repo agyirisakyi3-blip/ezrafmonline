@@ -15,6 +15,7 @@ interface Article {
   excerpt: string | null;
   featuredImage: string | null;
   publishedAt: Date | null;
+  viewCount?: number;
   category?: { name: string; slug: string } | null;
   author?: { name: string } | null;
 }
@@ -51,6 +52,11 @@ function Slide({ article, priority }: { article: Article; priority: boolean }) {
           <p className="hidden md:block text-sm text-white/70 line-clamp-2 max-w-2xl">
             {article.excerpt}
           </p>
+          <div className="hidden md:flex items-center gap-3 mt-2 text-xs text-white/50">
+            {article.viewCount !== undefined && (
+              <span>{article.viewCount.toLocaleString()} views</span>
+            )}
+          </div>
         </div>
       </div>
     </Link>

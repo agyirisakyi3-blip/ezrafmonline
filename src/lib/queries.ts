@@ -14,6 +14,7 @@ const articleSelect = {
   excerpt: true,
   featuredImage: true,
   publishedAt: true,
+  viewCount: true,
   category: { select: { name: true, slug: true } },
 } satisfies Prisma.ArticleSelect;
 
@@ -24,6 +25,7 @@ const articleListSelect = {
   excerpt: true,
   featuredImage: true,
   publishedAt: true,
+  viewCount: true,
   category: { select: { name: true, slug: true } },
   author: { select: { id: true, name: true } },
 } satisfies Prisma.ArticleSelect;
@@ -73,6 +75,8 @@ export const getAuthorById = cache(async (id: string) => {
       name: true,
       email: true,
       role: true,
+      bio: true,
+      avatarUrl: true,
       createdAt: true,
       articles: {
         where: { status: "published" },

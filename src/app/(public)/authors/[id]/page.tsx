@@ -34,12 +34,23 @@ export default async function AuthorPage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-10 flex items-center gap-6">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
-          {author.name.charAt(0).toUpperCase()}
-        </div>
+        {author.avatarUrl ? (
+          <img
+            src={author.avatarUrl}
+            alt={author.name}
+            className="h-20 w-20 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
+            {author.name.charAt(0).toUpperCase()}
+          </div>
+        )}
         <div>
           <h1 className="text-3xl font-bold text-zinc-900">{author.name}</h1>
           <p className="mt-1 text-zinc-500 capitalize">{author.role.toLowerCase()} at Ezrafmonline</p>
+          {author.bio && (
+            <p className="mt-2 text-sm text-zinc-600 max-w-lg">{author.bio}</p>
+          )}
           <p className="mt-1 text-sm text-zinc-400">
             {articles.length} article{articles.length !== 1 ? "s" : ""} published
           </p>

@@ -11,24 +11,53 @@ export const metadata: Metadata = siteMetadata({
   path: "/search",
 });
 
+async function getCategories() {
+  return prisma.category.findMany({ orderBy: { name: "asc" } });
+}
+
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; date?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, category: catParam, date } = await searchParams;
   const query = q?.trim() ?? "";
 
-  const articles = query
+  const allCategories = await getCategories();
+
+  const where: Record<string, unknown> = { status: "published" };
+
+  if (query) {
+    where.OR = [
+      { title: { contains: query, mode: "insensitive" } },
+      { excerpt: { contains: query, mode: "insensitive" } },
+    ];
+  }
+
+  if (catParam) {
+    where.category = { slug: catParam };
+  }
+
+  if (date) {
+    const start = new Date(date);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+    where.publishedAt = { gte: start, lt: end };
+  }
+
+  const articles = (query || catParam || date)
     ? await prisma.article.findMany({
-        where: {
-          status: "published",
-          OR: [
-            { title: { contains: query, mode: "insensitive" } },
-            { excerpt: { contains: query, mode: "insensitive" } },
-          ],
+        where: where as any,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          featuredImage: true,
+          publishedAt: true,
+          category: { select: { name: true, slug: true } },
+          author: { select: { name: true } },
         },
-        include: { category: true, author: { select: { name: true } } },
         orderBy: { publishedAt: "desc" },
         take: 20,
       })
@@ -41,23 +70,50 @@ export default async function SearchPage({
         <p className="mt-1 text-zinc-500">Find the stories that matter to you</p>
       </div>
 
-      <form className="mb-8">
-        <div className="relative">
-          <svg
-            className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+      <form className="mb-8 space-y-3">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <svg
+              className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              name="q"
+              defaultValue={query}
+              placeholder="Search articles..."
+              className="block w-full rounded-lg border border-zinc-300 bg-white py-3.5 pl-12 pr-4 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
+            />
+          </div>
+          <button
+            type="submit"
+            className="rounded-lg bg-primary px-5 py-3.5 text-sm font-semibold text-white hover:bg-primary-dark transition-colors"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+            Search
+          </button>
+        </div>
+        <div className="flex gap-3">
+          <select
+            name="category"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">All Categories</option>
+            {allCategories.map((cat) => (
+              <option key={cat.id} value={cat.slug} selected={catParam === cat.slug}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
           <input
-            type="text"
-            name="q"
-            defaultValue={query}
-            placeholder="Search articles..."
-            className="block w-full rounded-lg border border-zinc-300 bg-white py-3.5 pl-12 pr-4 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
+            type="date"
+            name="date"
+            defaultValue={date ?? ""}
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </form>

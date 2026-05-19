@@ -13,6 +13,8 @@ model User {
   email     String    @unique
   password  String
   role      String    @default("EDITOR")
+  bio       String?
+  avatarUrl String?
   articles  Article[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -72,6 +74,12 @@ model SiteConfig {
   weatherCity      String? @default("Accra")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 model Ad {

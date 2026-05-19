@@ -4,12 +4,27 @@ import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminArticlesPage() {
-  const articles = await prisma.article.findMany({
-    include: { category: true, author: { select: { name: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+const PER_PAGE = 20;
 
+export default async function AdminArticlesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+
+  const [articles, total] = await Promise.all([
+    prisma.article.findMany({
+      include: { category: true, author: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+      skip: (currentPage - 1) * PER_PAGE,
+      take: PER_PAGE,
+    }),
+    prisma.article.count(),
+  ]);
+
+  const totalPages = Math.ceil(total / PER_PAGE);
   const draftCount = articles.filter((a) => a.status === "draft").length;
   const publishedCount = articles.filter((a) => a.status === "published").length;
 
@@ -175,6 +190,40 @@ export default async function AdminArticlesPage() {
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-4">
+          {currentPage > 1 && (
+            <a
+              href={`/cms/articles?page=${currentPage - 1}`}
+              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+            >
+              Previous
+            </a>
+          )}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <a
+              key={p}
+              href={`/cms/articles?page=${p}`}
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                p === currentPage
+                  ? "bg-primary text-white"
+                  : "border border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+              }`}
+            >
+              {p}
+            </a>
+          ))}
+          {currentPage < totalPages && (
+            <a
+              href={`/cms/articles?page=${currentPage + 1}`}
+              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+            >
+              Next
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 }

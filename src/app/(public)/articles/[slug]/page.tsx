@@ -9,6 +9,8 @@ import { siteMetadata, articleJsonLd } from "@/lib/seo";
 import JsonLd from "@/components/ui/json-ld";
 import AdSlot from "@/components/ads/ad-slot";
 import TrackView from "@/components/track-view";
+import ShareButtons from "@/components/share-buttons";
+import NewsletterForm from "@/components/newsletter-form";
 import {
   getPublishedArticleBySlug,
   getRelatedArticles,
@@ -71,7 +73,7 @@ export default async function ArticlePage({
             {article.title}
           </h1>
 
-          <div className="flex items-center gap-3 text-sm text-zinc-500 mb-8 pb-6 border-b border-zinc-200">
+          <div className="flex items-center gap-3 text-sm text-zinc-500 mb-6 pb-6 border-b border-zinc-200 flex-wrap">
             {article.author?.name && (
               <Link href={`/authors/${article.author.id}`} className="font-medium text-zinc-700 hover:text-primary transition-colors">
                 By {article.author.name}
@@ -79,6 +81,8 @@ export default async function ArticlePage({
             )}
             <span>&middot;</span>
             <time>{article.publishedAt && formatDateLong(article.publishedAt)}</time>
+            <span>&middot;</span>
+            <span>{article.viewCount.toLocaleString()} views</span>
           </div>
 
           {article.featuredImage && (
@@ -100,6 +104,13 @@ export default async function ArticlePage({
             </p>
           )}
 
+          <div className="mb-6">
+            <ShareButtons
+              url={`${process.env.AUTH_URL || "http://localhost:3001"}/articles/${article.slug}`}
+              title={article.title}
+            />
+          </div>
+
           <ArticleContent html={article.content} />
 
           <AdSlot position="article_banner" className="my-8 py-4 border-y border-zinc-100" />
@@ -117,7 +128,7 @@ export default async function ArticlePage({
 
           <div className="mt-10 pt-6 border-t border-zinc-200">
             <Link href={`/authors/${article.author?.id ?? "#"}`} className="flex items-center gap-4 group">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-sm font-bold text-white shrink-0">
                 {article.author?.name?.charAt(0) ?? "A"}
               </div>
               <div>
@@ -127,6 +138,40 @@ export default async function ArticlePage({
                 <p className="text-sm text-zinc-400">Staff Writer at Ezrafmonline</p>
               </div>
             </Link>
+          </div>
+
+          {(relatedArticles.length > 0 || sidebarArticles.length > 0) && (
+            <div className="mt-10 pt-6 border-t border-zinc-200">
+              <h2 className="text-xl font-bold text-zinc-900 border-l-4 border-primary pl-3 mb-6">
+                More Articles
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[...relatedArticles, ...sidebarArticles].slice(0, 4).map((a) => (
+                  <Link key={a.id} href={`/articles/${a.slug}`} className="group flex gap-4">
+                    {a.featuredImage && (
+                      <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded bg-zinc-100">
+                        <img src={a.featuredImage} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-semibold text-zinc-900 line-clamp-3 group-hover:text-primary transition-colors">
+                        {a.title}
+                      </h4>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-10 pt-6 border-t border-zinc-200">
+            <h2 className="text-xl font-bold text-zinc-900 border-l-4 border-primary pl-3 mb-4">
+              Stay Updated
+            </h2>
+            <p className="text-sm text-zinc-500 mb-4">
+              Get the latest news delivered to your inbox.
+            </p>
+            <NewsletterForm />
           </div>
         </article>
 

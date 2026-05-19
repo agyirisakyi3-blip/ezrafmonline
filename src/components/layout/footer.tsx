@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import NewsletterForm from "@/components/newsletter-form";
 
 const socialLinks = [
   {
@@ -68,6 +69,17 @@ const bottomLinks = [
 export default function Footer() {
   return (
     <footer className="bg-zinc-900 text-zinc-400">
+      {/* Newsletter section */}
+      <div className="border-b border-zinc-800">
+        <div className="mx-auto max-w-7xl px-4 md:px-8 py-10">
+          <div className="max-w-xl mx-auto text-center">
+            <h2 className="text-xl font-bold text-white mb-2">Subscribe to Our Newsletter</h2>
+            <p className="text-sm text-zinc-400 mb-5">Get the latest news delivered straight to your inbox.</p>
+            <NewsletterForm />
+          </div>
+        </div>
+      </div>
+
       {/* Main footer content */}
       <div className="mx-auto max-w-7xl px-4 md:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">

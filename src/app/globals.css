@@ -16,6 +16,8 @@
   --color-sidebar-text-active: #ffffff;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 .hero-slider .swiper-pagination {
   bottom: 16px !important;
   display: flex;

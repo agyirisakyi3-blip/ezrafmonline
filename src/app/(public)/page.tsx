@@ -6,6 +6,7 @@ import HeroSlider from "@/components/articles/hero-slider";
 import { siteMetadata } from "@/lib/seo";
 import { getHomepageData, getPopularArticles } from "@/lib/queries";
 import AdSlot from "@/components/ads/ad-slot";
+import NewsletterForm from "@/components/newsletter-form";
 
 export const metadata: Metadata = siteMetadata({
   title: "Home",
@@ -179,6 +180,14 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
+
+      <section className="bg-zinc-50 border-y border-zinc-100 py-12">
+        <div className="max-w-xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold text-zinc-900 mb-2">Never Miss a Story</h2>
+          <p className="text-sm text-zinc-500 mb-6">Subscribe to our newsletter and get the latest news delivered to your inbox.</p>
+          <NewsletterForm />
+        </div>
+      </section>
 
       {articles.length === 0 && (
         <div className="max-w-7xl mx-auto px-4 py-20 text-center">
