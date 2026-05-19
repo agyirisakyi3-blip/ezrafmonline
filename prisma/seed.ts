@@ -4,7 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { hash } from "bcryptjs";
 
-const url = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_tPo2qLzRKlA1@ep-autumn-forest-apxs75z7-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=verify-full";
+const url = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_tPo2qLzRKlA1@ep-autumn-forest-apxs75z7.c-7.us-east-1.aws.neon.tech/neondb?sslmode=verify-full";
 const pool = new Pool({ connectionString: url });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
