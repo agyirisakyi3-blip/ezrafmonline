@@ -38,3 +38,12 @@
   background: #fff;
   width: 32px;
 }
+
+@keyframes logo-glow {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+  50% { filter: brightness(1.15) drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+}
+
+.animate-logo {
+  animation: logo-glow 3s ease-in-out infinite;
+}

@@ -62,7 +62,7 @@ export default function Header() {
               alt="Ezrafmonline"
               width={160}
               height={40}
-              className={`w-auto transition-all duration-300 ${
+              className={`w-auto transition-all duration-300 animate-logo ${
                 scrolled ? "h-8" : "h-10"
               }`}
               priority
