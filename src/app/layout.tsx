@@ -55,6 +55,9 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Ezrafmonline" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://openweathermap.org" />
         {config?.googleAdsenseId && (
           <GoogleAdsense publisherId={config.googleAdsenseId} />
         )}

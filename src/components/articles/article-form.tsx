@@ -1,9 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Editor from "@/components/ui/editor";
 import { generateSlug } from "@/lib/utils";
+
+const Editor = dynamic(() => import("@/components/ui/editor"), { ssr: false });
 
 interface Category {
   id: string;

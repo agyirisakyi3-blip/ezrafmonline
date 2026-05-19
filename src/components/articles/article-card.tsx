@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface Article {
@@ -15,10 +16,13 @@ export function HeroCard({ article }: { article: Article }) {
   return (
     <section className="relative h-[240px] md:h-[500px] w-full overflow-hidden rounded-none md:rounded-lg bg-zinc-800">
       {article.featuredImage ? (
-        <img
+        <Image
           src={article.featuredImage}
           alt={article.title}
-          className="h-full w-full object-cover object-top"
+          fill
+          className="object-cover object-top"
+          priority
+          sizes="100vw"
         />
       ) : (
         <div className="h-full w-full bg-gradient-to-br from-accent to-accent-dark" />
@@ -48,10 +52,12 @@ export function TopStoryCard({ article }: { article: Article }) {
     <Link href={`/articles/${article.slug}`} className="group flex space-x-4">
       <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
         {article.featuredImage ? (
-          <img
+          <Image
             src={article.featuredImage}
             alt={article.title}
-            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            sizes="96px"
           />
         ) : (
           <div className="h-full w-full bg-zinc-200" />
@@ -74,10 +80,12 @@ export function GridCard({ article }: { article: Article }) {
     >
       <div className="relative h-32 w-full overflow-hidden rounded-t-md bg-zinc-100">
         {article.featuredImage ? (
-          <img
+          <Image
             src={article.featuredImage}
             alt={article.title}
-            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200" />
@@ -123,10 +131,12 @@ export function SidebarCard({
       </div>
       <div className="relative w-20 h-16 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
         {article.featuredImage ? (
-          <img
+          <Image
             src={article.featuredImage}
             alt={article.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="80px"
           />
         ) : (
           <div className="h-full w-full bg-zinc-200" />

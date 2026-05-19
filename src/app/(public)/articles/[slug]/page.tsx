@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { formatDateLong } from "@/lib/utils";
 import { SidebarCard } from "@/components/articles/article-card";
@@ -76,11 +77,14 @@ export default async function ArticlePage({
           </div>
 
           {article.featuredImage && (
-            <div className="mb-8 overflow-hidden rounded-lg bg-zinc-100">
-              <img
+            <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-zinc-100">
+              <Image
                 src={article.featuredImage}
                 alt={article.title}
-                className="w-full object-cover"
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
               />
             </div>
           )}

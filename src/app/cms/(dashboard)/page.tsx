@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 
@@ -300,11 +301,13 @@ export default async function AdminDashboard() {
               <div className="flex items-center gap-4 min-w-0">
                 <span className="text-xs font-mono text-zinc-300 w-6 h-6 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0">{(i + 1)}</span>
                 {article.featuredImage && (
-                  <div className="h-12 w-18 rounded-xl overflow-hidden bg-zinc-100 shrink-0 ring-1 ring-zinc-200/50 group-hover/item:ring-primary/20 transition-all">
-                    <img
+                  <div className="relative h-12 w-18 shrink-0 overflow-hidden rounded-xl bg-zinc-100 ring-1 ring-zinc-200/50 group-hover/item:ring-primary/20 transition-all">
+                    <Image
                       src={article.featuredImage}
                       alt=""
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="72px"
                     />
                   </div>
                 )}

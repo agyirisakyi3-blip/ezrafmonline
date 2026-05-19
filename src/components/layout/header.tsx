@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -59,12 +60,15 @@ export default function Header() {
           }`}
         >
           <Link href="/" className="shrink-0">
-            <img
+            <Image
               src="/logo.png"
               alt="Ezrafmonline"
+              width={160}
+              height={40}
               className={`w-auto transition-all duration-300 ${
                 scrolled ? "h-8" : "h-10"
               }`}
+              priority
             />
           </Link>
 
@@ -133,9 +137,11 @@ export default function Header() {
           }`}
         >
           <Link href="/" className="shrink-0">
-            <img
+            <Image
               src="/logo.png"
               alt="Ezrafmonline"
+              width={120}
+              height={32}
               className={`w-auto transition-all duration-300 ${
                 scrolled ? "h-6" : "h-8"
               }`}

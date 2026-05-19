@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
@@ -25,11 +26,11 @@ export default async function SearchPage({
           OR: [
             { title: { contains: query } },
             { excerpt: { contains: query } },
-            { content: { contains: query } },
           ],
         },
         include: { category: true, author: { select: { name: true } } },
         orderBy: { publishedAt: "desc" },
+        take: 20,
       })
     : [];
 
@@ -76,11 +77,13 @@ export default async function SearchPage({
           >
             <article className="flex flex-col gap-4 sm:flex-row">
               {article.featuredImage && (
-                <div className="w-full sm:w-44 h-32 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
-                  <img
+                <div className="relative w-full sm:w-44 h-32 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
+                  <Image
                     src={article.featuredImage}
                     alt={article.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, 176px"
                   />
                 </div>
               )}

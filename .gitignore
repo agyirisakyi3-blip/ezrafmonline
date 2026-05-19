@@ -54,3 +54,5 @@ ezrafmonline.logo.jpg
 next-env.d.ts
 
 /src/generated/prisma
+
+.vercel

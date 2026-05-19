@@ -73,20 +73,19 @@ export const getEditorPicks = cache(async (take = 6) => {
 });
 
 export const getDeeplyRead = cache(async (take = 5) => {
+  const ids = await prisma.$queryRaw<Array<{ id: string }>>`
+    SELECT id FROM "Article"
+    WHERE status = 'published'
+    ORDER BY LENGTH(content) DESC
+    LIMIT ${take}
+  `;
+  if (ids.length === 0) return [];
   const articles = await prisma.article.findMany({
-    where: { status: "published" },
-    select: {
-      id: true, title: true, slug: true, excerpt: true,
-      featuredImage: true, publishedAt: true, content: true,
-      category: { select: { name: true, slug: true } },
-    },
+    where: { id: { in: ids.map((r) => r.id) } },
+    select: articleSelect,
     orderBy: { publishedAt: "desc" },
-    take: 50,
   });
-  return articles
-    .sort((a, b) => b.content.length - a.content.length)
-    .slice(0, take)
-    .map(({ content, ...rest }) => rest);
+  return articles;
 });
 
 export const getRelatedArticles = cache(async (categoryId: string, excludeId: string, take = 5) => {

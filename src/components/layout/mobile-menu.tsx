@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
@@ -39,7 +40,7 @@ export default function MobileMenu() {
           />
           <div className="fixed inset-y-0 right-0 w-72 max-w-full bg-white shadow-xl">
             <div className="flex items-center justify-between bg-primary px-4 h-[72px]">
-              <img src="/logo.png" alt="Ezrafmonline" className="h-7 w-auto" />
+              <Image src="/logo.png" alt="Ezrafmonline" width={140} height={28} className="h-7 w-auto" />
               <button
                 onClick={() => setOpen(false)}
                 className="p-2 text-white/80 hover:text-white"

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type WeatherData = {
@@ -45,7 +46,7 @@ export default function WeatherWidget() {
 
   return (
     <span className="flex items-center gap-1">
-      <img src={weather.icon} alt="" className="h-5 w-5" />
+      <Image src={weather.icon} alt="" width={20} height={20} className="h-5 w-5" />
       <span>{weather.temp}°C</span>
       <span className="hidden lg:inline text-white/70">{weather.city}</span>
     </span>

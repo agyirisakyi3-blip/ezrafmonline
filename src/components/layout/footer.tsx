@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const socialLinks = [
@@ -73,9 +74,11 @@ export default function Footer() {
           {/* Brand / About */}
           <div>
             <Link href="/" className="inline-block mb-4">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Ezrafmonline"
+                width={160}
+                height={40}
                 className="h-10 w-auto brightness-0 invert"
               />
             </Link>

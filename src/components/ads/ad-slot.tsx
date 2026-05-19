@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getActiveAds, getSiteConfig } from "@/lib/ads";
 
 interface AdSlotProps {
@@ -39,10 +40,13 @@ export default async function AdSlot({ position, className = "" }: AdSlotProps) 
                 rel={ad.linkUrl ? "noopener noreferrer" : undefined}
                 className="block"
               >
-                <img
+                <Image
                   src={ad.imageUrl}
                   alt={ad.name}
+                  width={728}
+                  height={90}
                   className="max-w-full h-auto"
+                  sizes="100vw"
                 />
               </a>
             );
