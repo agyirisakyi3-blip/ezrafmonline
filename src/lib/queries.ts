@@ -4,7 +4,7 @@ import type { Prisma } from "@/generated/prisma/client";
 
 const articleInclude = {
   category: true,
-  author: { select: { name: true } },
+  author: { select: { id: true, name: true } },
 } satisfies Prisma.ArticleInclude;
 
 const articleSelect = {
@@ -25,7 +25,7 @@ const articleListSelect = {
   featuredImage: true,
   publishedAt: true,
   category: { select: { name: true, slug: true } },
-  author: { select: { name: true } },
+  author: { select: { id: true, name: true } },
 } satisfies Prisma.ArticleSelect;
 
 
@@ -63,6 +63,24 @@ export const getCategoryBySlug = cache(async (slug: string) => {
 
 export const getAllCategories = cache(async () => {
   return prisma.category.findMany({ orderBy: { name: "asc" } });
+});
+
+export const getAuthorById = cache(async (id: string) => {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      articles: {
+        where: { status: "published" },
+        orderBy: { publishedAt: "desc" },
+        select: articleListSelect,
+      },
+    },
+  });
 });
 
 export const getPopularArticles = cache(async (take = 5) => {

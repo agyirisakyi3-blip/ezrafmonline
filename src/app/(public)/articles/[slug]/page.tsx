@@ -73,7 +73,9 @@ export default async function ArticlePage({
 
           <div className="flex items-center gap-3 text-sm text-zinc-500 mb-8 pb-6 border-b border-zinc-200">
             {article.author?.name && (
-              <span className="font-medium text-zinc-700">By {article.author.name}</span>
+              <Link href={`/authors/${article.author.id}`} className="font-medium text-zinc-700 hover:text-primary transition-colors">
+                By {article.author.name}
+              </Link>
             )}
             <span>&middot;</span>
             <time>{article.publishedAt && formatDateLong(article.publishedAt)}</time>
@@ -114,17 +116,17 @@ export default async function ArticlePage({
           })} />
 
           <div className="mt-10 pt-6 border-t border-zinc-200">
-            <div className="flex items-center gap-4">
+            <Link href={`/authors/${article.author?.id ?? "#"}`} className="flex items-center gap-4 group">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                 {article.author?.name?.charAt(0) ?? "A"}
               </div>
               <div>
-                <p className="font-semibold text-zinc-900">
+                <p className="font-semibold text-zinc-900 group-hover:text-primary transition-colors">
                   {article.author?.name ?? "Anonymous"}
                 </p>
                 <p className="text-sm text-zinc-400">Staff Writer at Ezrafmonline</p>
               </div>
-            </div>
+            </Link>
           </div>
         </article>
 

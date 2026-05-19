@@ -4,6 +4,7 @@ import "./globals.css";
 import { getSiteConfig } from "@/lib/ads";
 import GoogleAdsense from "@/components/ads/google-adsense";
 import MetaPixel from "@/components/ads/meta-pixel";
+import Analytics from "@/components/analytics";
 import ServiceWorkerRegister from "@/components/service-worker-register";
 
 const geistSans = Geist({
@@ -58,6 +59,9 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://openweathermap.org" />
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
+        )}
         {config?.googleAdsenseId && (
           <GoogleAdsense publisherId={config.googleAdsenseId} />
         )}
@@ -67,6 +71,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased">
         {children}
+        <Analytics />
         <ServiceWorkerRegister />
       </body>
     </html>

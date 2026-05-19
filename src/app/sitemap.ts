@@ -12,6 +12,11 @@ export default async function sitemap() {
     select: { slug: true },
   });
 
+  const authors = await prisma.user.findMany({
+    select: { id: true, updatedAt: true },
+    where: { articles: { some: { status: "published" } } },
+  });
+
   return [
     {
       url: SITE_URL,
@@ -36,6 +41,12 @@ export default async function sitemap() {
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.5,
+    })),
+    ...authors.map((author) => ({
+      url: `${SITE_URL}/authors/${author.id}`,
+      lastModified: author.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.4,
     })),
   ];
 }
