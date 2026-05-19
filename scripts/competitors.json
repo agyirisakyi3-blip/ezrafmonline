@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Ghana News Agency",
+    "site": "ghananewsagency.org",
+    "rss": "https://ghananewsagency.org/rss.xml",
+    "category": "General"
+  },
+  {
+    "name": "Citi Newsroom",
+    "site": "citinewsroom.com",
+    "rss": "https://citinewsroom.com/feed/",
+    "category": "General"
+  },
+  {
+    "name": "Joy Online",
+    "site": "myjoyonline.com",
+    "rss": "https://www.myjoyonline.com/feed/",
+    "category": "General"
+  },
+  {
+    "name": "Daily Mail GH",
+    "site": "dailymailgh.com",
+    "rss": "https://dailymailgh.com/feed/",
+    "category": "General"
+  },
+  {
+    "name": "Graphic Online",
+    "site": "graphic.com.gh",
+    "rss": "https://www.graphic.com.gh/rss.xml",
+    "category": "General"
+  }
+]
