@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { HeroCard, TopStoryCard, GridCard, SidebarCard } from "@/components/articles/article-card";
+import { TopStoryCard, GridCard, SidebarCard } from "@/components/articles/article-card";
+import HeroSlider from "@/components/articles/hero-slider";
 import { siteMetadata } from "@/lib/seo";
 import { getHomepageData, getPopularArticles } from "@/lib/queries";
 import AdSlot from "@/components/ads/ad-slot";
@@ -28,8 +29,8 @@ export default async function HomePage() {
     getPopularArticles(3),
   ]);
 
-  const featured = articles[0];
-  const remaining = articles.slice(1);
+  const sliderArticles = articles.slice(0, 5);
+  const remaining = articles.slice(5);
 
   let topStories: typeof articles = [];
   let sidebarArticles: typeof articles = [];
@@ -57,11 +58,7 @@ export default async function HomePage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            {featured && (
-              <Link href={`/articles/${featured.slug}`} className="block">
-                <HeroCard article={featured} />
-              </Link>
-            )}
+            <HeroSlider articles={sliderArticles} />
 
             {topStories.length > 0 && (
               <section className="border-b border-zinc-200">

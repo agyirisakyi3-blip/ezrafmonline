@@ -15,3 +15,24 @@
   --color-sidebar-text: #cbd5e1;
   --color-sidebar-text-active: #ffffff;
 }
+
+.hero-slider .swiper-pagination {
+  bottom: 16px !important;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero-slider .swiper-pagination-bullet {
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+  transition: background 0.3s;
+}
+
+.hero-slider .swiper-pagination-bullet-active {
+  background: #fff;
+  width: 32px;
+}
