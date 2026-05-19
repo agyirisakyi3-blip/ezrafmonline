@@ -12,6 +12,7 @@ import TrackView from "@/components/track-view";
 import ShareButtons from "@/components/share-buttons";
 import NewsletterForm from "@/components/newsletter-form";
 import Comments from "@/components/comments";
+import Breadcrumbs from "@/components/ui/breadcrumbs";
 import {
   getPublishedArticleBySlug,
   getRelatedArticles,
@@ -61,6 +62,14 @@ export default async function ArticlePage({
       <TrackView slug={article.slug} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <article className="lg:col-span-2">
+          <Breadcrumbs
+            crumbs={[
+              ...(article.category
+                ? [{ label: article.category.name, href: `/categories/${article.category.slug}` }]
+                : []),
+              { label: article.title },
+            ]}
+          />
           {article.category && (
             <Link
               href={`/categories/${article.category.slug}`}

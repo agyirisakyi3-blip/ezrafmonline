@@ -7,6 +7,8 @@ import MetaPixel from "@/components/ads/meta-pixel";
 import Analytics from "@/components/analytics";
 import ServiceWorkerRegister from "@/components/service-worker-register";
 import ThemeProvider from "@/components/theme-provider";
+import CookieConsent from "@/components/cookie-consent";
+import BackToTop from "@/components/back-to-top";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -74,6 +76,8 @@ export default async function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <CookieConsent />
+        <BackToTop />
         <Analytics />
         <ServiceWorkerRegister />
       </body>
