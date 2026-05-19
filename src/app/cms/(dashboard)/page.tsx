@@ -67,7 +67,7 @@ export default async function AdminDashboard() {
       bg: "bg-primary-light",
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
         </svg>
       ),
     },
@@ -75,11 +75,11 @@ export default async function AdminDashboard() {
       label: "Published",
       value: publishedCount,
       pct: (publishedCount / maxVal) * 100,
-      gradient: "from-green-500 to-green-600",
-      bg: "bg-green-50",
+      gradient: "from-emerald-500 to-emerald-600",
+      bg: "bg-emerald-50",
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
     },
@@ -91,7 +91,7 @@ export default async function AdminDashboard() {
       bg: "bg-amber-50",
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
         </svg>
       ),
     },
@@ -99,45 +99,52 @@ export default async function AdminDashboard() {
       label: "Categories",
       value: totalCategories,
       pct: (totalCategories / maxVal) * 100,
-      gradient: "from-purple-500 to-purple-600",
-      bg: "bg-purple-50",
+      gradient: "from-violet-500 to-violet-600",
+      bg: "bg-violet-50",
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
         </svg>
       ),
     },
   ];
 
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">Dashboard</h1>
-            <p className="text-sm text-zinc-500">Welcome back. Here&apos;s an overview of your content.</p>
-          </div>
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Dashboard</h1>
+          <p className="text-sm text-zinc-500 mt-1">Welcome back. Here&apos;s an overview of your content.</p>
         </div>
+        <Link
+          href="/cms/articles/new"
+          className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-dark transition-all shadow-lg shadow-primary/25 hover:shadow-primary/30"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          New Article
+        </Link>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="group bg-white rounded-xl border border-zinc-200 p-5 hover:shadow-md hover:border-zinc-300 transition-all duration-200"
+            className="group bg-white rounded-2xl border border-zinc-200/80 p-6 hover:shadow-xl hover:border-zinc-300 transition-all duration-300 hover:-translate-y-0.5"
           >
-            <div className="flex items-center justify-between mb-4">
-              <span className={`inline-flex items-center justify-center h-10 w-10 rounded-lg ${stat.bg} ${stat.gradient.split(" ")[0].replace("from-", "text-").replace("-500", "-600")}`}>
+            <div className="flex items-center justify-between mb-5">
+              <span className={`inline-flex items-center justify-center h-11 w-11 rounded-xl ${stat.bg}`}>
                 {stat.icon}
               </span>
-              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">{stat.label.split(" ")[0]}</span>
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider bg-zinc-50 px-2.5 py-1 rounded-lg">{stat.label.split(" ")[0]}</span>
             </div>
-            <p className="text-3xl font-bold text-zinc-900 mb-1">{stat.value}</p>
-            <p className="text-sm text-zinc-500 mb-3">{stat.label}</p>
-            <div className="h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+            <p className="text-3xl font-bold text-zinc-900 tracking-tight mb-1">{stat.value}</p>
+            <p className="text-sm text-zinc-500 mb-4">{stat.label}</p>
+            <div className="h-2 rounded-full bg-zinc-100 overflow-hidden">
               <div
                 className={`h-full rounded-full bg-gradient-to-r ${stat.gradient} transition-all duration-500`}
                 style={{ width: `${Math.max(stat.pct, 4)}%` }}
@@ -148,74 +155,76 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Traffic Analytics */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-blue-500 to-blue-600" />
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-7 w-1 rounded-full bg-gradient-to-b from-sky-500 to-sky-600" />
           <div>
             <h2 className="text-lg font-bold text-zinc-900">Traffic Analytics</h2>
             <p className="text-xs text-zinc-500">Page views and popular content</p>
           </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-3 mb-5">
-          <div className="bg-white rounded-xl border border-zinc-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-blue-50 text-blue-600">
+        <div className="grid gap-6 sm:grid-cols-3 mb-6">
+          <div className="bg-white rounded-2xl border border-zinc-200/80 p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-sky-50 text-sky-600">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                 </svg>
               </span>
-              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">All time</span>
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider bg-zinc-50 px-2.5 py-1 rounded-lg">All time</span>
             </div>
-            <p className="text-3xl font-bold text-zinc-900 mb-1">{totalViews._sum.viewCount ?? 0}</p>
+            <p className="text-3xl font-bold text-zinc-900 tracking-tight mb-1">{totalViews._sum.viewCount ?? 0}</p>
             <p className="text-sm text-zinc-500">Total Article Views</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-zinc-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-green-50 text-green-600">
+          <div className="bg-white rounded-2xl border border-zinc-200/80 p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                 </svg>
               </span>
-              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Today</span>
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider bg-zinc-50 px-2.5 py-1 rounded-lg">Today</span>
             </div>
-            <p className="text-3xl font-bold text-zinc-900 mb-1">{todayViews._sum.count ?? 0}</p>
+            <p className="text-3xl font-bold text-zinc-900 tracking-tight mb-1">{todayViews._sum.count ?? 0}</p>
             <p className="text-sm text-zinc-500">Views Today</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-zinc-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-amber-50 text-amber-600">
+          <div className="bg-white rounded-2xl border border-zinc-200/80 p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-amber-50 text-amber-600">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                 </svg>
               </span>
-              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">7 Days</span>
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider bg-zinc-50 px-2.5 py-1 rounded-lg">7 Days</span>
             </div>
-            <p className="text-3xl font-bold text-zinc-900 mb-1">{weekViews._sum.count ?? 0}</p>
+            <p className="text-3xl font-bold text-zinc-900 tracking-tight mb-1">{weekViews._sum.count ?? 0}</p>
             <p className="text-sm text-zinc-500">Views This Week</p>
           </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           {/* Daily chart */}
-          <div className="bg-white rounded-xl border border-zinc-200 p-5">
-            <h3 className="text-sm font-semibold text-zinc-900 mb-4">Daily Views (Last 14 days)</h3>
+          <div className="bg-white rounded-2xl border border-zinc-200/80 p-6">
+            <h3 className="text-sm font-semibold text-zinc-900 mb-5">Daily Views (Last 14 days)</h3>
             {dailyStats.length > 0 ? (
-              <div className="flex items-end gap-1.5 h-32">
+              <div className="flex items-end gap-2 h-36">
                 {(() => {
                   const maxDaily = Math.max(...dailyStats.map((d) => d._sum.count ?? 0), 1);
                   return dailyStats.map((d) => {
                     const h = ((d._sum.count ?? 0) / maxDaily) * 100;
                     const label = d.date.slice(5);
                     return (
-                      <div key={d.date} className="flex-1 flex flex-col items-center gap-1 group">
-                        <span className="text-[10px] text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity">{d._sum.count}</span>
-                        <div
-                          className="w-full rounded-sm bg-gradient-to-t from-blue-500 to-blue-400 hover:from-blue-600 transition-all cursor-pointer"
-                          style={{ height: `${Math.max(h, 2)}%` }}
-                        />
+                      <div key={d.date} className="flex-1 flex flex-col items-center gap-1.5 group">
+                        <span className="text-[10px] text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity font-medium">{d._sum.count}</span>
+                        <div className="relative w-full rounded-lg bg-zinc-100 overflow-hidden" style={{ height: `${Math.max(h, 3)}%` }}>
+                          <div
+                            className="absolute bottom-0 w-full rounded-lg bg-gradient-to-t from-sky-500 to-sky-400 group-hover:from-sky-600 transition-all cursor-pointer"
+                            style={{ height: "100%" }}
+                          />
+                        </div>
                         <span className="text-[9px] text-zinc-400 font-mono">{label}</span>
                       </div>
                     );
@@ -223,18 +232,23 @@ export default async function AdminDashboard() {
                 })()}
               </div>
             ) : (
-              <p className="text-sm text-zinc-400 text-center py-8">No view data yet</p>
+              <p className="text-sm text-zinc-400 text-center py-10">No view data yet</p>
             )}
           </div>
 
           {/* Most viewed */}
           {mostViewed.length > 0 && (
-            <div className="bg-white rounded-xl border border-zinc-200 p-5">
-              <h3 className="text-sm font-semibold text-zinc-900 mb-4">Most Viewed Articles</h3>
-              <div className="space-y-3">
+            <div className="bg-white rounded-2xl border border-zinc-200/80 p-6">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-5">Most Viewed Articles</h3>
+              <div className="space-y-4">
                 {mostViewed.map((a, i) => (
-                  <div key={a.slug} className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-zinc-300 w-4 shrink-0">{(i + 1).toString().padStart(2, "0")}</span>
+                  <div key={a.slug} className="flex items-center gap-4">
+                    <span className={`text-xs font-mono w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+                      i === 0 ? "bg-amber-100 text-amber-700 font-bold" :
+                      i === 1 ? "bg-zinc-100 text-zinc-500 font-semibold" :
+                      i === 2 ? "bg-orange-100 text-orange-700 font-semibold" :
+                      "bg-zinc-50 text-zinc-400"
+                    }`}>{i + 1}</span>
                     <div className="flex-1 min-w-0">
                       <Link
                         href={`/cms/articles/${a.slug}`}
@@ -243,7 +257,7 @@ export default async function AdminDashboard() {
                         {a.title}
                       </Link>
                     </div>
-                    <span className="text-xs font-semibold text-blue-600 shrink-0 tabular-nums">{a.viewCount}</span>
+                    <span className="text-xs font-semibold text-sky-600 shrink-0 tabular-nums bg-sky-50 px-2.5 py-1 rounded-lg">{a.viewCount}</span>
                   </div>
                 ))}
               </div>
@@ -253,12 +267,12 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent Articles */}
-      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 bg-gradient-to-r from-white to-zinc-50/50">
+      <div className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary-light flex items-center justify-center">
+            <div className="h-9 w-9 rounded-xl bg-primary-light flex items-center justify-center">
               <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
               </svg>
             </div>
             <div>
@@ -268,10 +282,10 @@ export default async function AdminDashboard() {
           </div>
           <Link
             href="/cms/articles/new"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-md hover:from-primary-dark hover:to-primary-dark transition-all duration-200"
+            className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-primary-dark transition-all shadow-md shadow-primary/20"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             New Article
           </Link>
@@ -281,12 +295,12 @@ export default async function AdminDashboard() {
           {recentArticles.map((article, i) => (
             <div
               key={article.id}
-              className="flex items-center justify-between px-6 py-4 hover:bg-zinc-50/80 transition-colors group/item"
+              className="flex items-center justify-between px-6 py-4.5 hover:bg-zinc-50/80 transition-colors group/item"
             >
               <div className="flex items-center gap-4 min-w-0">
-                <span className="text-xs font-mono text-zinc-300 w-5 shrink-0">{(i + 1).toString().padStart(2, "0")}</span>
+                <span className="text-xs font-mono text-zinc-300 w-6 h-6 rounded-lg bg-zinc-50 flex items-center justify-center shrink-0">{(i + 1)}</span>
                 {article.featuredImage && (
-                  <div className="h-11 w-16 rounded-lg overflow-hidden bg-zinc-100 shrink-0 ring-1 ring-zinc-200/50 group-hover/item:ring-primary/30 transition-all">
+                  <div className="h-12 w-18 rounded-xl overflow-hidden bg-zinc-100 shrink-0 ring-1 ring-zinc-200/50 group-hover/item:ring-primary/20 transition-all">
                     <img
                       src={article.featuredImage}
                       alt=""
@@ -301,11 +315,11 @@ export default async function AdminDashboard() {
                   >
                     {article.title}
                   </Link>
-                  <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-400">
+                  <div className="flex items-center gap-2 mt-1 text-xs text-zinc-400">
                     {article.author?.name && (
                       <span className="flex items-center gap-1">
                         <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                         </svg>
                         {article.author.name}
                       </span>
@@ -313,17 +327,17 @@ export default async function AdminDashboard() {
                     {article.category?.name && (
                       <>
                         <span className="text-zinc-300">&middot;</span>
-                        <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600">
+                        <span className="inline-flex items-center rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600">
                           {article.category.name}
                         </span>
                       </>
                     )}
                     <span className="text-zinc-300">&middot;</span>
                     <span className={`flex items-center gap-1 ${
-                      article.status === "published" ? "text-green-600" : "text-amber-600"
+                      article.status === "published" ? "text-emerald-600" : "text-amber-600"
                     }`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${
-                        article.status === "published" ? "bg-green-500" : "bg-amber-500"
+                        article.status === "published" ? "bg-emerald-500" : "bg-amber-500"
                       }`} />
                       {article.status}
                     </span>
@@ -334,7 +348,7 @@ export default async function AdminDashboard() {
               </div>
               <Link
                 href={`/cms/articles/${article.id}/edit`}
-                className="opacity-0 group-hover/item:opacity-100 text-xs font-medium text-primary hover:text-primary-dark transition-all shrink-0 px-3 py-1.5 rounded-lg bg-primary-light/50 hover:bg-primary-light"
+                className="opacity-0 group-hover/item:opacity-100 text-xs font-medium text-primary hover:text-primary-dark transition-all shrink-0 px-3 py-1.5 rounded-xl bg-primary-light/50 hover:bg-primary-light"
               >
                 Edit &rarr;
               </Link>
@@ -342,11 +356,11 @@ export default async function AdminDashboard() {
           ))}
           {recentArticles.length === 0 && (
             <div className="px-6 py-16 text-center">
-              <svg className="mx-auto h-12 w-12 text-zinc-200 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              <svg className="mx-auto h-14 w-14 text-zinc-200 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
               </svg>
               <p className="text-zinc-400 text-sm mb-1">No articles yet</p>
-              <Link href="/cms/articles/new" className="text-primary text-sm font-medium hover:underline">
+              <Link href="/cms/articles/new" className="text-primary text-sm font-semibold hover:underline">
                 Create your first article
               </Link>
             </div>

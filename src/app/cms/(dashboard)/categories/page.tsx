@@ -8,13 +8,10 @@ export default async function AdminCategoriesPage() {
   });
 
   return (
-    <div>
-      <div className="flex items-center gap-3 mb-8">
-        <div className="h-8 w-1 rounded-full bg-gradient-to-b from-purple-500 to-purple-600" />
-        <div>
-          <h1 className="text-2xl font-bold text-zinc-900">Categories</h1>
-          <p className="text-sm text-zinc-500">Manage content categories ({categories.length} total)</p>
-        </div>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Categories</h1>
+        <p className="text-sm text-zinc-500 mt-1">Manage content categories</p>
       </div>
       <CategoryManager categories={categories} />
     </div>

@@ -1,39 +1,57 @@
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-zinc-50 via-white to-primary-light/30">
+    <div className="flex min-h-screen bg-zinc-50">
       {/* Decorative side */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-zinc-900 items-center justify-center">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent rounded-full blur-3xl" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-sidebar via-sidebar to-primary-dark items-center justify-center">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
         </div>
-        <div className="relative text-center px-12">
-          <img src="/logo.png" alt="Ezrafmonline" className="h-16 w-auto mx-auto mb-6 brightness-0 invert" />
-          <h1 className="text-4xl font-bold text-white mb-3">Ezrafmonline</h1>
-          <p className="text-white/70 text-lg max-w-md mx-auto">
+
+        {/* Decorative grid pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="h-full w-full" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
+
+        <div className="relative text-center px-16">
+          <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-gradient-to-br from-primary to-primary-dark shadow-2xl shadow-primary/30 mb-8">
+            <span className="text-2xl font-bold text-white">EZ</span>
+          </div>
+          <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Ezrafmonline</h1>
+          <p className="text-white/60 text-lg max-w-md mx-auto leading-relaxed">
             Your trusted source for the latest news, breaking stories, and updates.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-3 text-white/40 text-sm">
-            <span className="h-px w-12 bg-white/20" />
-            Content Management System
-            <span className="h-px w-12 bg-white/20" />
+          <div className="mt-12 flex items-center justify-center gap-4 text-white/30 text-sm">
+            <span className="h-px w-16 bg-white/10" />
+            <span className="tracking-wider uppercase text-xs font-medium">Content Management System</span>
+            <span className="h-px w-16 bg-white/10" />
           </div>
         </div>
       </div>
 
       {/* Login form */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      <div className="flex-1 flex items-center justify-center px-8">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
-            <img src="/logo.png" alt="Ezrafmonline" className="h-12 w-auto mx-auto mb-3" />
+          <div className="lg:hidden text-center mb-10">
+            <div className="inline-flex items-center justify-center h-14 w-14 rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/20 mb-4">
+              <span className="text-lg font-bold text-white">EZ</span>
+            </div>
             <h1 className="text-xl font-bold text-zinc-900">Ezrafmonline CMS</h1>
-            <p className="text-sm text-zinc-500">Sign in to your account</p>
+            <p className="text-sm text-zinc-500 mt-1">Sign in to your account</p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-zinc-200 p-8 shadow-sm">
-            <div className="hidden lg:block text-center mb-6">
-              <div className="h-1 w-16 mx-auto rounded-full bg-gradient-to-r from-primary to-accent mb-4" />
+          <div className="bg-white rounded-2xl border border-zinc-200/80 p-8 shadow-sm shadow-zinc-200/50">
+            <div className="hidden lg:block text-center mb-8">
+              <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/20 mb-5">
+                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
               <h2 className="text-xl font-bold text-zinc-900">Welcome back</h2>
               <p className="text-sm text-zinc-500 mt-1">Sign in to manage your content</p>
             </div>
@@ -55,8 +73,8 @@ export default function LoginPage() {
                   Email address
                 </label>
                 <div className="relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                  <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                   </svg>
                   <input
                     id="email"
@@ -65,7 +83,7 @@ export default function LoginPage() {
                     autoComplete="email"
                     required
                     placeholder="you@example.com"
-                    className="block w-full rounded-lg border border-zinc-300 pl-10 pr-3 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
+                    className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
                   />
                 </div>
               </div>
@@ -75,8 +93,8 @@ export default function LoginPage() {
                   Password
                 </label>
                 <div className="relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
                   <input
                     id="password"
@@ -85,21 +103,21 @@ export default function LoginPage() {
                     autoComplete="current-password"
                     required
                     placeholder="Enter your password"
-                    className="block w-full rounded-lg border border-zinc-300 pl-10 pr-3 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
+                    className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-gradient-to-r from-primary to-primary-dark px-4 py-2.5 text-sm font-semibold text-white hover:shadow-md hover:from-primary-dark hover:to-primary-dark transition-all duration-200"
+                className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-dark px-4 py-2.5 text-sm font-semibold text-white hover:shadow-xl hover:from-primary-dark hover:to-primary-dark transition-all duration-200 shadow-lg shadow-primary/25"
               >
                 Sign in
               </button>
             </form>
           </div>
 
-          <p className="text-center text-xs text-zinc-400 mt-6">
+          <p className="text-center text-xs text-zinc-400 mt-8">
             &copy; {new Date().getFullYear()} Ezrafmonline. All rights reserved.
           </p>
         </div>

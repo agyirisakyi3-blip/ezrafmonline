@@ -9,4 +9,9 @@
   --color-primary-light: #f0f7ec;
   --color-accent: #d97706;
   --color-accent-dark: #b25c03;
+  --color-sidebar: #0f172a;
+  --color-sidebar-hover: #1e293b;
+  --color-sidebar-active: #1a4d0c;
+  --color-sidebar-text: #cbd5e1;
+  --color-sidebar-text-active: #ffffff;
 }
