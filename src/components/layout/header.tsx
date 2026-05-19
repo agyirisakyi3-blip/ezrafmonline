@@ -23,19 +23,14 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    let lastY = 0;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const y = window.scrollY;
-          setScrolled(y > 60);
-          setHidden(y > 300 && y > lastY);
-          lastY = y;
+          setScrolled(window.scrollY > 60);
           ticking = false;
         });
         ticking = true;
@@ -51,7 +46,7 @@ export default function Header() {
         scrolled
           ? "bg-primary/95 backdrop-blur-md shadow-md"
           : "bg-primary shadow-xs"
-      } ${hidden ? "-translate-y-full" : "translate-y-0"}`}
+      }`}
     >
       <DateTimeDisplay />
       <div className="mx-auto max-w-7xl px-4 md:px-8">
