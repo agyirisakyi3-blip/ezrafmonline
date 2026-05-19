@@ -74,7 +74,7 @@ export default function Header() {
             />
           </Link>
 
-          <nav className="flex items-center justify-center flex-1 mx-6 space-x-0.5">
+          <nav className="flex items-center justify-end ml-auto space-x-0.5">
             {navLinks.map((link) => (
               <NavLink
                 key={link.href}
