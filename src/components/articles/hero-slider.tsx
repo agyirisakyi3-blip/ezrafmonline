@@ -84,7 +84,7 @@ export default function HeroSlider({
       >
         {articles.map((article, i) => (
           <SwiperSlide key={article.id}>
-            <Slide article={article} priority={i === 0} />
+            <Slide article={article} priority={i < 2} />
           </SwiperSlide>
         ))}
       </Swiper>

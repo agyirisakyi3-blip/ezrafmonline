@@ -7,6 +7,7 @@ import { siteMetadata } from "@/lib/seo";
 import { getHomepageData, getPopularArticles } from "@/lib/queries";
 import AdSlot from "@/components/ads/ad-slot";
 import NewsletterForm from "@/components/newsletter-form";
+import JsonLd from "@/components/ui/json-ld";
 
 export const metadata: Metadata = siteMetadata({
   title: "Home",
@@ -56,6 +57,20 @@ export default async function HomePage() {
 
   return (
     <div>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Ezrafmonline",
+        url: process.env.AUTH_URL || "https://ezrafmonline.vercel.app",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${process.env.AUTH_URL || "https://ezrafmonline.vercel.app"}/search?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      }} />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">

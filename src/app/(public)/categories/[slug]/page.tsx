@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { siteMetadata } from "@/lib/seo";
 import { getCategoryBySlug, getArticlesByCategory } from "@/lib/queries";
+import Breadcrumbs from "@/components/ui/breadcrumbs";
 
 export const revalidate = 120;
 
@@ -38,13 +39,10 @@ export default async function CategoryPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <Breadcrumbs
+        crumbs={[{ label: category.name }]}
+      />
       <div className="mb-8">
-        <Link
-          href="/articles"
-          className="mb-2 inline-block text-sm text-primary hover:underline"
-        >
-          &larr; All News
-        </Link>
         <h1 className="text-3xl font-bold text-zinc-900">{category.name}</h1>
         {category.description && (
           <p className="mt-1 text-zinc-500">{category.description}</p>
