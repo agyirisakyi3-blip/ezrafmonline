@@ -1,41 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { hash } from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-
-async function createUser(formData: FormData) {
-  "use server";
-
-  const session = await auth();
-  const user = session?.user as { role?: string } | undefined;
-  if (!user || user.role !== "ADMIN") {
-    throw new Error("Unauthorized");
-  }
-
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const role = formData.get("role") as string;
-
-  if (!name || !email || !password || !["ADMIN", "EDITOR"].includes(role)) {
-    throw new Error("All fields are required");
-  }
-
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    throw new Error("A user with this email already exists");
-  }
-
-  const hashedPassword = await hash(password, 12);
-
-  await prisma.user.create({
-    data: { name, email, password: hashedPassword, role: role as any },
-  });
-
-  revalidatePath("/cms/users");
-  redirect("/cms/users");
-}
+import { CreateUserForm } from "./create-user-form";
 
 export default async function AdminUsersPage() {
   const session = await auth();
@@ -128,62 +94,7 @@ export default async function AdminUsersPage() {
         </div>
 
         <div>
-          <div className="bg-white rounded-2xl border border-zinc-200/80 p-6 sticky top-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-10 w-10 rounded-xl bg-primary-light flex items-center justify-center">
-                <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="font-semibold text-zinc-900">Create User</h2>
-                <p className="text-xs text-zinc-400">Add a new team member</p>
-              </div>
-            </div>
-            <form action={createUser} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-1.5">Name</label>
-                <input type="text" id="name" name="name" required placeholder="Full name"
-                  className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-zinc-700 mb-1.5">Email</label>
-                <input type="email" id="email" name="email" required placeholder="you@example.com"
-                  className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-zinc-700 mb-1.5">Password</label>
-                <input type="password" id="password" name="password" required minLength={6} placeholder="Min. 6 characters"
-                  className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
-                />
-              </div>
-              <div>
-                <label htmlFor="role" className="block text-sm font-medium text-zinc-700 mb-1.5">Role</label>
-                <select id="role" name="role" required
-                  className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
-                >
-                  <option value="EDITOR">Editor</option>
-                  <option value="ADMIN">Admin</option>
-                </select>
-                <p className="mt-1.5 text-xs text-zinc-400">
-                  Editors can write and publish articles. Admins have full access including user management.
-                </p>
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark transition-all shadow-lg shadow-primary/25"
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                  Create Account
-                </span>
-              </button>
-            </form>
-          </div>
+          <CreateUserForm />
         </div>
       </div>
     </div>
