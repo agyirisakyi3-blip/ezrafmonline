@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/security";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const ip = req.headers.get("x-forwarded-for") ?? "live-stream";
+  if (!checkRateLimit(`live:${ip}`, 30, 60_000)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const config = await prisma.siteConfig.findUnique({ where: { id: "default" } });
 
   const response = NextResponse.json({

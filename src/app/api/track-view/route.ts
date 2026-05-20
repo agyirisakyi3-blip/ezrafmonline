@@ -21,7 +21,7 @@ function detectSource(referer: string | null): string {
 
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") ?? "track";
-  if (!checkRateLimit(`track:${ip}`, 60, 60_000)) {
+  if (!checkRateLimit(`track:${ip}`, 30, 60_000)) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
@@ -34,22 +34,24 @@ export async function POST(req: Request) {
   const device = detectDevice(req.headers.get("user-agent"));
   const source = detectSource(req.headers.get("referer"));
 
-  await Promise.all([
+  const [articleResult] = await Promise.all([
     prisma.article.updateMany({
       where: { slug },
       data: { viewCount: { increment: 1 } },
     }),
-    prisma.dailyView.upsert({
-      where: { date_path: { date: today, path: slug } },
-      create: { date: today, path: slug, count: 1 },
-      update: { count: { increment: 1 } },
-    }),
-    prisma.dailyTraffic.upsert({
-      where: { date_device_source: { date: today, device, source } },
-      create: { date: today, device, source, count: 1 },
-      update: { count: { increment: 1 } },
-    }),
+    prisma.$executeRawUnsafe(
+      `INSERT INTO "DailyView" (id, date, path, count) VALUES (gen_random_uuid(), $1, $2, 1)
+       ON CONFLICT (date, path) DO UPDATE SET count = "DailyView".count + 1`,
+      today, slug,
+    ),
+    prisma.$executeRawUnsafe(
+      `INSERT INTO "DailyTraffic" (id, date, device, source, count) VALUES (gen_random_uuid(), $1, $2, $3, 1)
+       ON CONFLICT (date, device, source) DO UPDATE SET count = "DailyTraffic".count + 1`,
+      today, device, source,
+    ),
   ]);
 
-  return NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true });
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }

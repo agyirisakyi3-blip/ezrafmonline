@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 768, 1024, 1280, 1536],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       { protocol: "https", hostname: "ezrafmonline.vercel.app" },
       { protocol: "https", hostname: "*.ezrafmonline.vercel.app" },
@@ -64,6 +65,12 @@ const nextConfig: NextConfig = {
           key: "Strict-Transport-Security",
           value: "max-age=63072000; includeSubDomains; preload",
         },
+      ],
+    },
+    {
+      source: "/",
+      headers: [
+        { key: "Cache-Control", value: "public, max-age=0, s-maxage=60, stale-while-revalidate=300" },
       ],
     },
     {

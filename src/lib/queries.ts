@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "./prisma";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -37,21 +38,29 @@ export type CachedArticle = Prisma.ArticleGetPayload<{
   include: typeof articleInclude;
 }>;
 
-export const getPublishedArticleBySlug = cache(async (slug: string) => {
-  return prisma.article.findUnique({
-    where: { slug, status: "published" },
-    include: articleInclude,
-  });
-});
+export const getPublishedArticleBySlug = unstable_cache(
+  cache(async (slug: string) => {
+    return prisma.article.findUnique({
+      where: { slug, status: "published" },
+      include: articleInclude,
+    });
+  }),
+  undefined,
+  { revalidate: 60, tags: ["articles"] },
+);
 
-export const getPublishedArticles = cache(async (take = 50) => {
-  return prisma.article.findMany({
-    where: { status: "published" },
-    select: articleListSelect,
-    orderBy: { publishedAt: "desc" },
-    take,
-  });
-});
+export const getPublishedArticles = unstable_cache(
+  cache(async (take = 50) => {
+    return prisma.article.findMany({
+      where: { status: "published" },
+      select: articleListSelect,
+      orderBy: { publishedAt: "desc" },
+      take,
+    });
+  }),
+  undefined,
+  { revalidate: 60, tags: ["articles"] },
+);
 
 export const getArticlesByCategory = cache(async (slug: string, page = 1, perPage = 50) => {
   return prisma.article.findMany({
@@ -67,9 +76,13 @@ export const getCategoryBySlug = cache(async (slug: string) => {
   return prisma.category.findUnique({ where: { slug } });
 });
 
-export const getAllCategories = cache(async () => {
-  return prisma.category.findMany({ orderBy: { name: "asc" } });
-});
+export const getAllCategories = unstable_cache(
+  cache(async () => {
+    return prisma.category.findMany({ orderBy: { name: "asc" } });
+  }),
+  undefined,
+  { revalidate: 300, tags: ["categories"] },
+);
 
 export const getAuthorById = cache(async (id: string) => {
   return prisma.user.findUnique({
@@ -143,16 +156,20 @@ export const getLatestArticles = cache(async (excludeId: string, take = 5) => {
   });
 });
 
-export const getHomepageData = cache(async () => {
-  const [articles, deeplyRead, editorPicks] = await Promise.all([
-    prisma.article.findMany({
-      where: { status: "published" },
-      orderBy: { publishedAt: "desc" },
-      take: 20,
-      select: articleListSelect,
-    }),
-    getDeeplyRead(5),
-    getEditorPicks(6),
-  ]);
-  return { articles, deeplyRead, editorPicks };
-});
+export const getHomepageData = unstable_cache(
+  cache(async () => {
+    const [articles, deeplyRead, editorPicks] = await Promise.all([
+      prisma.article.findMany({
+        where: { status: "published" },
+        orderBy: { publishedAt: "desc" },
+        take: 20,
+        select: articleListSelect,
+      }),
+      getDeeplyRead(5),
+      getEditorPicks(6),
+    ]);
+    return { articles, deeplyRead, editorPicks };
+  }),
+  undefined,
+  { revalidate: 120, tags: ["articles", "homepage"] },
+);
