@@ -1,38 +1,42 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, sanitizePlain } from "@/lib/security";
+import { z } from "zod";
+
+const submissionSchema = z.object({
+  authorName: z.string().min(1).max(100),
+  email: z.string().email().optional().or(z.literal("")),
+  phone: z.string().max(20).optional().or(z.literal("")),
+  title: z.string().min(1).max(200),
+  content: z.string().min(1).max(10000),
+  category: z.string().max(50).optional().default("general"),
+});
 
 export async function POST(req: Request) {
+  const ip = req.headers.get("x-forwarded-for") ?? "submission:post";
+  if (!checkRateLimit(`submission:${ip}`, 3, 60_000)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   try {
-    const { authorName, email, phone, title, content, category } = await req.json();
-
-    if (!authorName?.trim() || !title?.trim() || !content?.trim()) {
+    const json = await req.json();
+    const result = submissionSchema.safeParse(json);
+    if (!result.success) {
       return NextResponse.json(
-        { error: "Name, title, and content are required" },
-        { status: 400 }
+        { error: "Validation failed", details: result.error.issues },
+        { status: 400 },
       );
     }
 
-    if (title.length > 200) {
-      return NextResponse.json(
-        { error: "Title must be under 200 characters" },
-        { status: 400 }
-      );
-    }
-
-    if (content.length > 10000) {
-      return NextResponse.json(
-        { error: "Content must be under 10,000 characters" },
-        { status: 400 }
-      );
-    }
+    const { authorName, email, phone, title, content, category } = result.data;
 
     await prisma.citizenSubmission.create({
       data: {
-        authorName: authorName.trim(),
+        authorName: sanitizePlain(authorName.trim()),
         email: email?.trim() || null,
         phone: phone?.trim() || null,
-        title: title.trim(),
-        content: content.trim(),
+        title: sanitizePlain(title.trim()),
+        content: sanitizePlain(content.trim()),
         category: category || "general",
       },
     });

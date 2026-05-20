@@ -1,4 +1,12 @@
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reset_token?: string; forgot?: string }>;
+}) {
+  const searchParamsResolved = await searchParams;
+  const reset_token = searchParamsResolved.reset_token;
+  const forgot = searchParamsResolved.forgot;
+
   return (
     <div className="flex min-h-screen bg-zinc-50">
       {/* Decorative side */}
@@ -46,75 +54,109 @@ export default function LoginPage() {
           </div>
 
           <div className="bg-white rounded-2xl border border-zinc-200/80 p-8 shadow-sm shadow-zinc-200/50">
-            <div className="hidden lg:block text-center mb-8">
-              <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/20 mb-5">
-                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-zinc-900">Welcome back</h2>
-              <p className="text-sm text-zinc-500 mt-1">Sign in to manage your content</p>
-            </div>
-
-            <form
-              action={async (formData) => {
-                "use server";
-                const { signIn } = await import("@/lib/auth");
-                await signIn("credentials", {
-                  email: formData.get("email"),
-                  password: formData.get("password"),
-                  redirectTo: "/cms",
-                });
-              }}
-              className="space-y-5"
-            >
-              <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-zinc-700 mb-1.5">
-                  Email address
-                </label>
-                <div className="relative">
-                  <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                  </svg>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    placeholder="you@example.com"
-                    className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
-                  />
+            {forgot ? (
+              <>
+                <div className="text-center mb-6">
+                  <h2 className="text-xl font-bold text-zinc-900">Forgot Password</h2>
+                  <p className="text-sm text-zinc-500 mt-1">Enter your email to receive a reset link</p>
                 </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-zinc-700 mb-1.5">
-                  Password
-                </label>
-                <div className="relative">
-                  <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                  </svg>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    placeholder="Enter your password"
-                    className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors placeholder:text-zinc-400"
-                  />
+                <form
+                  action={async (formData) => {
+                    "use server";
+                    await fetch(`${process.env.AUTH_URL || "http://localhost:3001"}/api/auth/forgot-password`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email: formData.get("email") }),
+                    });
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="you@example.com"
+                      className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <button type="submit" className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark transition-all">
+                    Send Reset Link
+                  </button>
+                  <p className="text-center">
+                    <a href="/cms/login" className="text-xs text-zinc-500 hover:text-primary">Back to sign in</a>
+                  </p>
+                </form>
+              </>
+            ) : (
+              <>
+                <div className="hidden lg:block text-center mb-8">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/20 mb-5">
+                    <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-zinc-900">Welcome back</h2>
+                  <p className="text-sm text-zinc-500 mt-1">Sign in to manage your content</p>
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-dark px-4 py-2.5 text-sm font-semibold text-white hover:shadow-xl hover:from-primary-dark hover:to-primary-dark transition-all duration-200 shadow-lg shadow-primary/25"
-              >
-                Sign in
-              </button>
-            </form>
+                <form
+                  action={async (formData) => {
+                    "use server";
+                    const { signIn } = await import("@/lib/auth");
+                    await signIn("credentials", {
+                      email: formData.get("email"),
+                      password: formData.get("password"),
+                      redirectTo: "/cms",
+                    });
+                  }}
+                  className="space-y-5"
+                >
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-semibold text-zinc-700 mb-1.5">Email address</label>
+                    <div className="relative">
+                      <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                      </svg>
+                      <input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com"
+                        className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-semibold text-zinc-700 mb-1.5">Password</label>
+                    <div className="relative">
+                      <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                      </svg>
+                      <input id="password" name="password" type="password" autoComplete="current-password" required placeholder="Enter your password"
+                        className="block w-full rounded-xl border border-zinc-300 pl-10 pr-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <a href="/cms/login?forgot=1" className="text-xs font-medium text-primary hover:text-primary-dark transition-colors">Forgot password?</a>
+                  </div>
+                  <button type="submit" className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-dark px-4 py-2.5 text-sm font-semibold text-white hover:shadow-xl hover:from-primary-dark hover:to-primary-dark transition-all duration-200 shadow-lg shadow-primary/25">
+                    Sign in
+                  </button>
+                </form>
+
+                {reset_token && (
+                  <div className="mt-6 pt-6 border-t border-zinc-200">
+                    <h3 className="text-sm font-semibold text-zinc-700 mb-3">Reset Your Password</h3>
+                    <form action="/api/auth/reset-password" method="POST" className="space-y-3">
+                      <input type="hidden" name="token" value={reset_token} />
+                      <div>
+                        <input name="password" type="password" required minLength={8} placeholder="New password (min 8 chars)"
+                          className="block w-full rounded-xl border border-zinc-300 px-3.5 py-2.5 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                      </div>
+                      <button type="submit" className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark transition-all">Reset Password</button>
+                    </form>
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <p className="text-center text-xs text-zinc-400 mt-8">

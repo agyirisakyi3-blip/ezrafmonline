@@ -3,20 +3,45 @@ import { auth } from "./auth";
 const requestStore = new Map<string, number[]>();
 
 const CLEANUP_INTERVAL = 60_000;
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, timestamps] of requestStore) {
-    const recent = timestamps.filter((t) => now - t < CLEANUP_INTERVAL);
-    if (recent.length === 0) requestStore.delete(key);
-    else requestStore.set(key, recent);
-  }
-}, CLEANUP_INTERVAL);
+if (typeof setInterval !== "undefined") {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, timestamps] of requestStore) {
+      const recent = timestamps.filter((t) => now - t < CLEANUP_INTERVAL);
+      if (recent.length === 0) requestStore.delete(key);
+      else requestStore.set(key, recent);
+    }
+  }, CLEANUP_INTERVAL);
+}
 
-export function checkRateLimit(
+export async function checkRateLimit(
   key: string,
   maxAttempts: number,
   windowMs: number,
-): boolean {
+): Promise<boolean> {
+  const upstashUrl = process.env.UPSTASH_REDIS_REST_URL;
+  const upstashToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (upstashUrl && upstashToken) {
+    try {
+      const now = Date.now();
+      const windowKey = Math.floor(now / windowMs);
+      const redisKey = `ratelimit:${key}:${windowKey}`;
+      const res = await fetch(`${upstashUrl}/incr/${redisKey}`, {
+        headers: { Authorization: `Bearer ${upstashToken}` },
+      });
+      const data = await res.json() as { result: number };
+      if (data.result === 1) {
+        await fetch(`${upstashUrl}/expire/${redisKey}/${Math.ceil(windowMs / 1000)}`, {
+          headers: { Authorization: `Bearer ${upstashToken}` },
+        });
+      }
+      return data.result <= maxAttempts;
+    } catch {
+      // fall through to in-memory
+    }
+  }
+
   const now = Date.now();
   const timestamps = requestStore.get(key) ?? [];
   const recent = timestamps.filter((t) => now - t < windowMs);

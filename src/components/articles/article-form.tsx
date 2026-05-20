@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/utils";
 
@@ -50,6 +50,8 @@ export default function ArticleForm({
   );
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -93,6 +95,35 @@ export default function ArticleForm({
       setUploading(false);
     }
   };
+
+  const getPayload = useCallback(() => ({
+    title,
+    slug,
+    excerpt,
+    content,
+    featuredImage,
+    status,
+    isEditorPick,
+    categoryId: categoryId || null,
+    seoTitle: seoTitle || null,
+    seoDescription: seoDescription || null,
+  }), [title, slug, excerpt, content, featuredImage, status, isEditorPick, categoryId, seoTitle, seoDescription]);
+
+  useEffect(() => {
+    if (!article?.id) return;
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/admin/articles/${article.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...getPayload(), status: "draft" }),
+        });
+        if (res.ok) setLastSaved(new Date());
+      } catch {}
+    }, 10000);
+    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
+  }, [title, slug, excerpt, content, featuredImage, categoryId, seoTitle, seoDescription, article?.id, getPayload]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -370,14 +401,34 @@ export default function ArticleForm({
 
       {/* Actions */}
       <div className="mt-8 flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-5 py-2.5 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
-        >
-          Cancel
-        </button>
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-5 py-2.5 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+          >
+            Cancel
+          </button>
+          {article?.slug && (
+            <a
+              href={`/articles/${article.slug}?preview=1`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-zinc-600 hover:text-primary border border-zinc-200 rounded-lg hover:border-primary transition-colors"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+              Preview
+            </a>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {lastSaved && (
+            <span className="text-[11px] text-zinc-400">
+              Auto-saved at {lastSaved.toLocaleTimeString()}
+            </span>
+          )}
           <button
             type="submit"
             disabled={saving}

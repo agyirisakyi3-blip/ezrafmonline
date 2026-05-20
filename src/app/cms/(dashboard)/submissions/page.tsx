@@ -18,7 +18,7 @@ export default async function SubmissionsPage({
   const perPage = 20;
 
   const where = statusFilter && ["pending", "approved", "rejected"].includes(statusFilter)
-    ? { status: statusFilter }
+    ? { status: statusFilter as any }
     : {};
 
   const [submissions, total, counts] = await Promise.all([

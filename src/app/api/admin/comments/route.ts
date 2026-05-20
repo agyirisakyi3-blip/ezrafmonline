@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const patchSchema = z.object({
   id: z.string().min(1),
-  status: z.enum(["pending", "approved", "rejected"]),
+  action: z.enum(["approve", "reject", "delete"]),
 });
 
 export async function GET(req: Request) {
@@ -16,26 +16,29 @@ export async function GET(req: Request) {
   }
 
   const { searchParams } = new URL(req.url);
-  const status = searchParams.get("status");
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const perPage = 20;
+  const filter = searchParams.get("filter");
 
-  const where = status && ["pending", "approved", "rejected"].includes(status)
-    ? { status }
-    : {};
+  const where = filter === "pending"
+    ? { isApproved: false }
+    : filter === "approved"
+      ? { isApproved: true }
+      : {};
 
-  const [submissions, total] = await Promise.all([
-    prisma.citizenSubmission.findMany({
-      where: where as any,
+  const [comments, total] = await Promise.all([
+    prisma.comment.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * perPage,
       take: perPage,
+      include: { article: { select: { title: true, slug: true } } },
     }),
-    prisma.citizenSubmission.count({ where: where as any }),
+    prisma.comment.count({ where }),
   ]);
 
   return NextResponse.json({
-    submissions,
+    comments,
     total,
     page,
     totalPages: Math.ceil(total / perPage),
@@ -52,18 +55,22 @@ export async function PATCH(req: Request) {
     const json = await req.json();
     const result = patchSchema.safeParse(json);
     if (!result.success) {
-      return jsonResponse({ error: "Invalid request", details: result.error.issues }, { status: 400 });
+      return jsonResponse({ error: "Invalid request" }, { status: 400 });
     }
 
-    const { id, status } = result.data;
+    const { id, action } = result.data;
 
-    await prisma.citizenSubmission.update({
-      where: { id },
-      data: { status: status as any },
-    });
+    if (action === "delete") {
+      await prisma.comment.delete({ where: { id } });
+    } else {
+      await prisma.comment.update({
+        where: { id },
+        data: { isApproved: action === "approve" },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json({ error: "Failed to update submission" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update comment" }, { status: 500 });
   }
 }

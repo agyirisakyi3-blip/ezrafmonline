@@ -18,7 +18,7 @@ async function createUser(formData: FormData) {
   const password = formData.get("password") as string;
   const role = formData.get("role") as string;
 
-  if (!name || !email || !password || !role) {
+  if (!name || !email || !password || !["ADMIN", "EDITOR"].includes(role)) {
     throw new Error("All fields are required");
   }
 
@@ -30,7 +30,7 @@ async function createUser(formData: FormData) {
   const hashedPassword = await hash(password, 12);
 
   await prisma.user.create({
-    data: { name, email, password: hashedPassword, role },
+    data: { name, email, password: hashedPassword, role: role as any },
   });
 
   revalidatePath("/cms/users");

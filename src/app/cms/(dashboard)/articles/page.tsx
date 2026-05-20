@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import Image from "next/image";
 import { formatDate } from "@/lib/utils";
+import DeleteButton from "@/components/ui/delete-button";
 
 export const dynamic = "force-dynamic";
 
@@ -14,19 +16,33 @@ export default async function AdminArticlesPage({
   const { page: pageParam } = await searchParams;
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
+  const { search: searchParam, status: statusParam } = await searchParams as any;
+
+  const where: Record<string, unknown> = {};
+  if (statusParam === "draft" || statusParam === "published") {
+    where.status = statusParam;
+  }
+  if (searchParam) {
+    where.OR = [
+      { title: { contains: searchParam, mode: "insensitive" } },
+    ];
+  }
+
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
+      where: where as any,
       include: { category: true, author: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
       skip: (currentPage - 1) * PER_PAGE,
       take: PER_PAGE,
     }),
-    prisma.article.count(),
+    prisma.article.count({ where: where as any }),
   ]);
 
   const totalPages = Math.ceil(total / PER_PAGE);
   const draftCount = articles.filter((a) => a.status === "draft").length;
   const publishedCount = articles.filter((a) => a.status === "published").length;
+  const allArticlesCount = await prisma.article.count();
 
   return (
     <div className="space-y-8">
@@ -49,20 +65,27 @@ export default async function AdminArticlesPage({
         </Link>
       </div>
 
-      {/* Summary chips */}
-      <div className="flex items-center gap-3">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-zinc-200/80 text-sm">
-          <span className="font-semibold text-zinc-900">{articles.length}</span>
-          <span className="text-zinc-500">Total</span>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex items-center gap-3">
+          <a href="/cms/articles" className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm transition-colors ${!statusParam ? "bg-primary text-white border-primary" : "bg-white border-zinc-200/80 text-zinc-600 hover:bg-zinc-50"}`}>
+            <span className="font-semibold">{allArticlesCount}</span>
+            <span>All</span>
+          </a>
+          <a href="/cms/articles?status=published" className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm transition-colors ${statusParam === "published" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white border-zinc-200/80 text-zinc-600 hover:bg-zinc-50"}`}>
+            <span className="font-semibold">{publishedCount}</span>
+            <span>Published</span>
+          </a>
+          <a href="/cms/articles?status=draft" className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm transition-colors ${statusParam === "draft" ? "bg-amber-600 text-white border-amber-600" : "bg-white border-zinc-200/80 text-zinc-600 hover:bg-zinc-50"}`}>
+            <span className="font-semibold">{articles.filter((a) => a.status === "draft").length}</span>
+            <span>Drafts</span>
+          </a>
         </div>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-200/80 text-sm">
-          <span className="font-semibold text-emerald-700">{publishedCount}</span>
-          <span className="text-emerald-600">Published</span>
-        </div>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-200/80 text-sm">
-          <span className="font-semibold text-amber-700">{draftCount}</span>
-          <span className="text-amber-600">Drafts</span>
-        </div>
+        <div className="flex-1" />
+        <form method="GET" action="/cms/articles" className="flex gap-2">
+          <input type="text" name="search" defaultValue={searchParam || ""} placeholder="Search articles..." className="rounded-lg border border-zinc-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 w-48" />
+          <button type="submit" className="rounded-lg bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-200 transition-colors">Search</button>
+        </form>
       </div>
 
       {/* Articles table */}
@@ -97,11 +120,13 @@ export default async function AdminArticlesPage({
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3.5">
                       {article.featuredImage && (
-                        <div className="h-11 w-16 rounded-xl overflow-hidden bg-zinc-100 shrink-0 hidden sm:block ring-1 ring-zinc-200/50 group-hover:ring-primary/20 transition-all">
-                          <img
+                        <div className="h-11 w-16 rounded-xl overflow-hidden bg-zinc-100 shrink-0 hidden sm:block ring-1 ring-zinc-200/50 group-hover:ring-primary/20 transition-all relative">
+                          <Image
                             src={article.featuredImage}
                             alt=""
-                            className="h-full w-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="64px"
                           />
                         </div>
                       )}
@@ -172,6 +197,7 @@ export default async function AdminArticlesPage({
                         </svg>
                         Edit
                       </Link>
+                      <DeleteButton articleId={article.id} />
                     </div>
                   </td>
                 </tr>

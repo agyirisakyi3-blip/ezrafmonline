@@ -11,11 +11,12 @@ const articleUpdateSchema = z.object({
   excerpt: z.string().max(1000).optional().default(""),
   content: z.string(),
   featuredImage: z.string().max(1000).optional().default(""),
-  status: z.enum(["draft", "published"]),
+  status: z.enum(["draft", "published", "scheduled"]),
   isEditorPick: z.boolean().optional(),
   seoTitle: z.string().max(500).optional().default(""),
   seoDescription: z.string().max(1000).optional().default(""),
   categoryId: z.string().min(1).optional().default(""),
+  scheduledAt: z.string().optional().nullable(),
 });
 
 export async function PUT(
@@ -59,7 +60,7 @@ export async function PUT(
       excerpt: sanitizePlain(data.excerpt),
       content: sanitizeHtml(data.content),
       featuredImage: data.featuredImage,
-      status: data.status,
+      status: data.status as any,
       isEditorPick: data.isEditorPick ?? undefined,
       seoTitle: data.seoTitle ? sanitizePlain(data.seoTitle) : "",
       seoDescription: data.seoDescription ? sanitizePlain(data.seoDescription) : "",
@@ -67,7 +68,13 @@ export async function PUT(
       publishedAt:
         data.status === "published" && !existing.publishedAt
           ? new Date()
-          : data.status === "draft"
+          : data.status === "draft" && existing.publishedAt
+            ? existing.publishedAt
+            : undefined,
+      scheduledAt:
+        data.status === "scheduled" && data.scheduledAt
+          ? new Date(data.scheduledAt)
+          : data.status !== "scheduled"
             ? null
             : undefined,
     },

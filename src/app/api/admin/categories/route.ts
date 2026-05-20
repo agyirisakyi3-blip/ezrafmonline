@@ -51,6 +51,11 @@ export async function POST(req: Request) {
   const data = result.data;
   const slug = data.slug || generateSlug(data.name);
 
+  const existing = await prisma.category.findUnique({ where: { slug } });
+  if (existing) {
+    return jsonResponse({ error: "A category with this slug already exists" }, { status: 409 });
+  }
+
   const category = await prisma.category.create({
     data: {
       name: sanitizePlain(data.name),

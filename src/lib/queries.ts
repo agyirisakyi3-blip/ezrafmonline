@@ -53,11 +53,13 @@ export const getPublishedArticles = cache(async (take?: number) => {
   });
 });
 
-export const getArticlesByCategory = cache(async (slug: string) => {
+export const getArticlesByCategory = cache(async (slug: string, page = 1, perPage = 50) => {
   return prisma.article.findMany({
     where: { status: "published", category: { slug } },
     select: articleListSelect,
     orderBy: { publishedAt: "desc" },
+    skip: (page - 1) * perPage,
+    take: perPage,
   });
 });
 
@@ -142,13 +144,15 @@ export const getLatestArticles = cache(async (excludeId: string, take = 5) => {
 });
 
 export const getHomepageData = cache(async () => {
-  const articles = await prisma.article.findMany({
-    where: { status: "published" },
-    orderBy: { publishedAt: "desc" },
-    take: 30,
-    select: articleListSelect,
-  });
-  const deeplyRead = await getDeeplyRead(5);
-  const editorPicks = await getEditorPicks(6);
+  const [articles, deeplyRead, editorPicks] = await Promise.all([
+    prisma.article.findMany({
+      where: { status: "published" },
+      orderBy: { publishedAt: "desc" },
+      take: 30,
+      select: articleListSelect,
+    }),
+    getDeeplyRead(5),
+    getEditorPicks(6),
+  ]);
   return { articles, deeplyRead, editorPicks };
 });

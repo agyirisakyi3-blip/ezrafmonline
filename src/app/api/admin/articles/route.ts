@@ -11,11 +11,12 @@ const articleSchema = z.object({
   excerpt: z.string().max(1000).optional().default(""),
   content: z.string(),
   featuredImage: z.string().max(1000).optional().default(""),
-  status: z.enum(["draft", "published"]).optional().default("draft"),
+  status: z.enum(["draft", "published", "scheduled"]).optional().default("draft"),
   isEditorPick: z.boolean().optional().default(false),
   seoTitle: z.string().max(500).optional().default(""),
   seoDescription: z.string().max(1000).optional().default(""),
   categoryId: z.string().min(1).optional().default(""),
+  scheduledAt: z.string().optional().nullable(),
 });
 
 export async function POST(req: Request) {
@@ -50,13 +51,14 @@ export async function POST(req: Request) {
       excerpt: sanitizePlain(data.excerpt),
       content: sanitizeHtml(data.content),
       featuredImage: data.featuredImage,
-      status: data.status,
+      status: data.status as any,
       isEditorPick: data.isEditorPick,
       seoTitle: data.seoTitle ? sanitizePlain(data.seoTitle) : "",
       seoDescription: data.seoDescription ? sanitizePlain(data.seoDescription) : "",
       categoryId: data.categoryId || null,
       authorId: userId,
-      publishedAt: data.status === "published" ? new Date() : null,
+      publishedAt: data.status === "published" ? new Date() : undefined,
+      scheduledAt: data.status === "scheduled" && data.scheduledAt ? new Date(data.scheduledAt) : undefined,
     },
   });
 

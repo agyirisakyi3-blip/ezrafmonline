@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`;
+  const filename = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}${ext}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads");
 
   await mkdir(uploadDir, { recursive: true });
