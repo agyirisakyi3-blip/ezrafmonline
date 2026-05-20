@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { AnimatedCounter } from "@/components/animated-counter";
+import { DeviceBreakdown, SourceBreakdown } from "@/components/traffic-sources";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,8 @@ export default async function AdminDashboard() {
     weekViews,
     mostViewed,
     dailyStats,
+    deviceTraffic,
+    sourceTraffic,
   ] = await Promise.all([
     prisma.article.count(),
     prisma.category.count(),
@@ -52,7 +55,22 @@ export default async function AdminDashboard() {
       orderBy: { date: "asc" },
       take: 14,
     }),
+    prisma.dailyTraffic.groupBy({
+      by: ["device"],
+      _sum: { count: true },
+      where: { date: { gte: weekAgo } },
+    }),
+    prisma.dailyTraffic.groupBy({
+      by: ["source"],
+      _sum: { count: true },
+      where: { date: { gte: weekAgo } },
+    }),
   ]);
+
+  const deviceMap: Record<string, number> = {};
+  for (const d of deviceTraffic) deviceMap[d.device] = d._sum.count ?? 0;
+  const sourceMap: Record<string, number> = {};
+  for (const s of sourceTraffic) sourceMap[s.source] = s._sum.count ?? 0;
 
   const recentArticles = await prisma.article.findMany({
     include: { category: true, author: { select: { name: true } } },
@@ -300,6 +318,22 @@ export default async function AdminDashboard() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Device & Source breakdown */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <DeviceBreakdown
+          mobile={deviceMap.mobile ?? 0}
+          desktop={deviceMap.desktop ?? 0}
+          tablet={deviceMap.tablet ?? 0}
+        />
+        <SourceBreakdown
+          direct={sourceMap.direct ?? 0}
+          google={sourceMap.google ?? 0}
+          facebook={sourceMap.facebook ?? 0}
+          twitter={sourceMap.twitter ?? 0}
+          other={sourceMap.other ?? 0}
+        />
       </div>
 
       {/* Recent Articles */}

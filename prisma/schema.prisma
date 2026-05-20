@@ -52,6 +52,17 @@ model DailyView {
   @@index([date])
 }
 
+model DailyTraffic {
+  id     String @id @default(cuid())
+  date   String // YYYY-MM-DD
+  device String // "mobile" | "desktop" | "tablet"
+  source String // "direct" | "google" | "facebook" | "twitter" | "other"
+  count  Int    @default(0)
+
+  @@unique([date, device, source])
+  @@index([date])
+}
+
 model Article {
   id              String        @id @default(cuid())
   title           String
