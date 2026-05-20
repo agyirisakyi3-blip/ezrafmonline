@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import { AnimatedCounter } from "@/components/animated-counter";
 
 export const dynamic = "force-dynamic";
 
@@ -138,13 +139,13 @@ export default async function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
+        {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className="bg-white rounded-xl border border-zinc-200/70 p-5 hover:shadow-sm hover:border-zinc-300 transition-all"
+            className={`cms-animate-fade-in-up cms-delay-${i + 1} bg-white rounded-xl border border-zinc-200/70 p-5 hover:shadow-sm hover:border-zinc-300 hover:-translate-y-0.5 transition-all duration-200`}
           >
             <div className="flex items-center justify-between mb-4">
-              <span className={`inline-flex items-center justify-center h-9 w-9 rounded-lg ${stat.bg} ${stat.bg.includes('bg-') ? '' : ''}`}>
+              <span className={`inline-flex items-center justify-center h-9 w-9 rounded-lg ${stat.bg}`}>
                 <span className={stat.label === "Total Articles" ? "text-primary" : stat.label === "Published" ? "text-emerald-600" : stat.label === "Drafts" ? "text-amber-600" : "text-violet-600"}>
                   {stat.icon}
                 </span>
@@ -158,7 +159,9 @@ export default async function AdminDashboard() {
                 {stat.label.split(" ")[0]}
               </span>
             </div>
-            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1">{stat.value}</p>
+            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1">
+              <AnimatedCounter value={stat.value} />
+            </p>
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-zinc-500">{stat.label}</span>
               <span className="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5">
@@ -183,7 +186,7 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-3 mb-5">
-          <div className="bg-white rounded-xl border border-zinc-200/70 p-5">
+          <div className="cms-animate-fade-in-up cms-delay-5 bg-white rounded-xl border border-zinc-200/70 p-5 hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
               <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-sky-50 text-sky-600">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -192,11 +195,11 @@ export default async function AdminDashboard() {
               </span>
               <span className="text-[10px] font-semibold text-zinc-400 tracking-wider">All time</span>
             </div>
-            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1">{totalViews._sum.viewCount ?? 0}</p>
+            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1"><AnimatedCounter value={totalViews._sum.viewCount ?? 0} /></p>
             <p className="text-xs text-zinc-500">Total Article Views</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-zinc-200/70 p-5">
+          <div className="cms-animate-fade-in-up cms-delay-6 bg-white rounded-xl border border-zinc-200/70 p-5 hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
               <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -205,11 +208,11 @@ export default async function AdminDashboard() {
               </span>
               <span className="text-[10px] font-semibold text-zinc-400 tracking-wider">Today</span>
             </div>
-            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1">{todayViews._sum.count ?? 0}</p>
+            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1"><AnimatedCounter value={todayViews._sum.count ?? 0} /></p>
             <p className="text-xs text-zinc-500">Views Today</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-zinc-200/70 p-5">
+          <div className="cms-animate-fade-in-up cms-delay-7 bg-white rounded-xl border border-zinc-200/70 p-5 hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
               <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-amber-50 text-amber-600">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -218,7 +221,7 @@ export default async function AdminDashboard() {
               </span>
               <span className="text-[10px] font-semibold text-zinc-400 tracking-wider">7 Days</span>
             </div>
-            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1">{weekViews._sum.count ?? 0}</p>
+            <p className="text-2xl font-bold text-zinc-900 tracking-tight mb-1"><AnimatedCounter value={weekViews._sum.count ?? 0} /></p>
             <div className="flex items-center gap-1.5">
               <p className="text-xs text-zinc-500">Views this week</p>
               {weekAvg !== 0 && (
@@ -237,19 +240,22 @@ export default async function AdminDashboard() {
 
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Daily chart */}
-          <div className="bg-white rounded-xl border border-zinc-200/70 p-5">
+          <div className="cms-animate-fade-in-up cms-delay-8 bg-white rounded-xl border border-zinc-200/70 p-5">
             <h3 className="text-sm font-semibold text-zinc-900 mb-4">Daily Views</h3>
             {dailyStats.length > 0 ? (
               <div className="flex items-end gap-2 h-32">
                 {(() => {
                   const maxDaily = Math.max(...dailyStats.map((d) => d._sum.count ?? 0), 1);
-                  return dailyStats.map((d) => {
+                  return dailyStats.map((d, i) => {
                     const h = ((d._sum.count ?? 0) / maxDaily) * 100;
                     const label = d.date.slice(5);
                     return (
                       <div key={d.date} className="flex-1 flex flex-col items-center gap-1 group">
                         <span className="text-[9px] text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity font-medium">{d._sum.count}</span>
-                        <div className="relative w-full rounded-md bg-zinc-100 overflow-hidden" style={{ height: `${Math.max(h, 3)}%` }}>
+                        <div
+                          className="cms-animate-bar-grow relative w-full rounded-md bg-zinc-100 overflow-hidden"
+                          style={{ animationDelay: `${i * 0.04}s`, height: `${Math.max(h, 3)}%` }}
+                        >
                           <div
                             className="absolute bottom-0 w-full rounded-md bg-gradient-to-t from-sky-500 to-sky-400 group-hover:from-sky-600 transition-all"
                             style={{ height: "100%" }}
@@ -268,11 +274,11 @@ export default async function AdminDashboard() {
 
           {/* Most viewed */}
           {mostViewed.length > 0 && (
-            <div className="bg-white rounded-xl border border-zinc-200/70 p-5">
+            <div className="cms-animate-fade-in-up cms-delay-9 bg-white rounded-xl border border-zinc-200/70 p-5">
               <h3 className="text-sm font-semibold text-zinc-900 mb-4">Most Viewed</h3>
               <div className="space-y-3">
                 {mostViewed.map((a, i) => (
-                  <div key={a.id} className="flex items-center gap-3">
+                  <div key={a.id} className={`cms-animate-slide-in-right cms-delay-${Math.min(i + 1, 10)} flex items-center gap-3`}>
                     <span className={`text-xs font-mono w-5 h-5 rounded flex items-center justify-center shrink-0 ${
                       i === 0 ? "bg-amber-100 text-amber-700 font-bold" :
                       i === 1 ? "bg-zinc-100 text-zinc-500 font-semibold" :
@@ -297,7 +303,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent Articles */}
-      <div className="bg-white rounded-xl border border-zinc-200/70 overflow-hidden">
+      <div className="cms-animate-fade-in-up cms-delay-10 bg-white rounded-xl border border-zinc-200/70 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-primary-light flex items-center justify-center">
@@ -325,7 +331,8 @@ export default async function AdminDashboard() {
           {recentArticles.map((article, i) => (
             <div
               key={article.id}
-              className="flex items-center justify-between px-5 py-3.5 hover:bg-zinc-50/80 transition-colors group/item"
+              className="cms-animate-fade-in px-5 py-3.5 hover:bg-zinc-50/80 transition-colors group/item"
+              style={{ animationDelay: `${i * 0.06}s` }}
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span className="text-xs font-mono text-zinc-300 w-5 h-5 rounded bg-zinc-50 flex items-center justify-center shrink-0">{(i + 1)}</span>

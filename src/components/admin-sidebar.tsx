@@ -202,9 +202,11 @@ function NavLink({
           : "text-sidebar-text hover:bg-white/[0.04] hover:text-white"
       }`}
     >
-      {active && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
-      )}
+      <span className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-r-full transition-all duration-300 ${
+        active
+          ? "h-5 bg-primary opacity-100"
+          : "h-0 bg-primary opacity-0 group-hover:h-3 group-hover:opacity-40"
+      }`} />
       <span className={`transition-colors duration-200 ${
         active ? "text-primary" : "text-white/35 group-hover:text-white/60"
       }`}>
