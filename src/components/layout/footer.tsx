@@ -130,6 +130,11 @@ export default function Footer() {
                   Live Radio
                 </Link>
               </li>
+              <li>
+                <Link href="/submit-story" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                  Submit a Story
+                </Link>
+              </li>
             </ul>
           </div>
 

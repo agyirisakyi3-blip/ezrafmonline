@@ -23,6 +23,15 @@ const navItems = [
     ),
   },
   {
+    label: "Submissions",
+    href: "/cms/submissions",
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-3.314m-9.566 7.5l9.566 3.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+      </svg>
+    ),
+  },
+  {
     label: "New Article",
     href: "/cms/articles/new",
     icon: (
@@ -80,22 +89,20 @@ export default function AdminSidebar({
 
   return (
     <aside className="w-64 bg-sidebar flex flex-col shrink-0 h-screen sticky top-0">
-      {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-white/5">
+      <div className="h-16 flex items-center px-5 border-b border-white/[0.06]">
         <Link href="/cms" className="flex items-center gap-3 group">
-          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg shadow-primary/20">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg shadow-primary/25 ring-1 ring-white/10">
             <span className="text-white text-xs font-bold">EZ</span>
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-bold text-white group-hover:text-primary-light transition-colors leading-tight">Ezrafmonline</span>
-            <span className="text-[10px] font-medium text-accent uppercase tracking-widest">CMS</span>
+            <span className="text-[10px] font-medium text-accent/80 uppercase tracking-[0.15em]">CMS</span>
           </div>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <div className="flex-1 py-6 px-3 space-y-1 overflow-y-auto scrollbar-thin">
-        <p className="px-3 text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-3">Main</p>
+      <div className="flex-1 py-6 px-3 space-y-0.5 overflow-y-auto scrollbar-thin">
+        <p className="px-3 text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-3">Main</p>
         {navItems.map((item) => (
           <NavLink key={item.href} href={item.href} icon={item.icon} active={isActive(item.href)}>
             {item.label}
@@ -104,8 +111,8 @@ export default function AdminSidebar({
 
         {user.role === "ADMIN" && (
           <>
-            <div className="pt-5 mt-4 border-t border-white/5">
-              <p className="px-3 text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-3">Administration</p>
+            <div className="pt-4 mt-4 border-t border-white/[0.06]">
+              <p className="px-3 text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-3">Administration</p>
               {adminNavItems.map((item) => (
                 <NavLink key={item.href} href={item.href} icon={item.icon} active={isActive(item.href)}>
                   {item.label}
@@ -115,8 +122,8 @@ export default function AdminSidebar({
           </>
         )}
 
-        <div className="pt-5 mt-4 border-t border-white/5">
-          <p className="px-3 text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-3">Site</p>
+        <div className="pt-4 mt-4 border-t border-white/[0.06]">
+          <p className="px-3 text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-3">Site</p>
           <NavLink
             href="/"
             active={false}
@@ -131,21 +138,20 @@ export default function AdminSidebar({
         </div>
       </div>
 
-      {/* User footer */}
-      <div className="border-t border-white/5 px-4 py-4 bg-white/[0.02]">
+      <div className="border-t border-white/[0.06] px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-primary/20">
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-primary/20 ring-1 ring-white/10">
             {user.initial}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white truncate leading-tight">
               {user.name}
             </p>
-            <p className="text-[11px] text-white/40 capitalize font-medium">{user.role.toLowerCase()}</p>
+            <p className="text-[11px] text-white/35 capitalize font-medium">{user.role.toLowerCase()}</p>
           </div>
           <a
             href={signOutUrl}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-white/25 hover:text-red-400 hover:bg-red-500/10 transition-all"
             title="Sign out"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -172,21 +178,21 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 group ${
+      className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 group relative ${
         active
-          ? "bg-primary text-white shadow-lg shadow-primary/20"
-          : "text-sidebar-text hover:bg-sidebar-hover hover:text-white"
+          ? "bg-primary/15 text-white"
+          : "text-sidebar-text hover:bg-white/[0.04] hover:text-white"
       }`}
     >
+      {active && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
+      )}
       <span className={`transition-colors duration-200 ${
-        active ? "text-white" : "text-white/40 group-hover:text-white/60"
+        active ? "text-primary" : "text-white/35 group-hover:text-white/60"
       }`}>
         {icon}
       </span>
       <span>{children}</span>
-      {active && (
-        <span className="ml-auto h-2 w-2 rounded-full bg-accent shadow-sm shadow-accent/50" />
-      )}
     </Link>
   );
 }

@@ -96,6 +96,21 @@ model Subscriber {
   createdAt DateTime @default(now())
 }
 
+model CitizenSubmission {
+  id          String   @id @default(cuid())
+  authorName  String
+  email       String?
+  phone       String?
+  title       String
+  content     String
+  category    String   @default("general")
+  status      String   @default("pending") // pending, approved, rejected
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, createdAt(sort: Desc)])
+}
+
 model Ad {
   id        String    @id @default(cuid())
   name      String
