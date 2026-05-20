@@ -78,6 +78,8 @@ model Article {
   @@index([status, publishedAt(sort: Desc)])
   @@index([categoryId, status, publishedAt(sort: Desc)])
   @@index([isEditorPick, status, publishedAt(sort: Desc)])
+  @@index([status, viewCount(sort: Desc)])
+  @@index([publishedAt(sort: Desc)])
 }
 
 model Comment {

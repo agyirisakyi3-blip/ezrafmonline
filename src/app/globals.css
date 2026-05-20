@@ -40,8 +40,8 @@
 }
 
 @keyframes logo-glow {
-  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-  50% { filter: brightness(1.15) drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
 }
 
 .animate-logo {

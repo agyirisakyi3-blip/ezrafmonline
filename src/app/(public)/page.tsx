@@ -9,7 +9,6 @@ import AdSlot from "@/components/ads/ad-slot";
 import NewsletterForm from "@/components/newsletter-form";
 import JsonLd from "@/components/ui/json-ld";
 import BreakingTicker from "@/components/breaking-ticker";
-import { getPublishedArticles } from "@/lib/queries";
 
 const categoryColors: Record<string, { bg: string; dot: string }> = {
   News: { bg: "bg-blue-50 dark:bg-blue-950/20", dot: "bg-blue-600" },
@@ -40,14 +39,13 @@ async function getCategories() {
 }
 
 export default async function HomePage() {
-  const [{ articles, deeplyRead, editorPicks }, categories, popularArticles, breakingNews] = await Promise.all([
+  const [{ articles, deeplyRead, editorPicks }, categories, popularArticles] = await Promise.all([
     getHomepageData(),
     getCategories(),
     getPopularArticles(3),
-    getPublishedArticles(5),
   ]);
 
-  const breakingArticles = breakingNews.slice(0, 5);
+  const breakingArticles = articles.slice(0, 5);
 
   const sliderArticles = articles.slice(0, 5);
   const remaining = articles.slice(5);
@@ -103,8 +101,8 @@ export default async function HomePage() {
                     Top Stories
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {topStories.map((article) => (
-                      <TopStoryCard key={article.id} article={article} />
+                    {topStories.map((article, i) => (
+                      <TopStoryCard key={article.id} article={article} priority={i < 2} />
                     ))}
                   </div>
                 </div>

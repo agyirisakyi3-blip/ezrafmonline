@@ -37,7 +37,7 @@ export default function WeatherWidget() {
       }
     }
     fetchWeather();
-    const id = setInterval(fetchWeather, 300_000);
+    const id = setInterval(fetchWeather, 900_000);
     return () => {
       cancelled = true;
       clearInterval(id);

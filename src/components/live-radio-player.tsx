@@ -23,7 +23,7 @@ export default function LiveRadioPlayer() {
     if (!audioRef.current) {
       if (!streamInfo.url) return;
       audioRef.current = new Audio(streamInfo.url);
-      audioRef.current.preload = "auto";
+      audioRef.current.preload = "none";
 
       audioRef.current.addEventListener("play", () => setPlaying(true));
       audioRef.current.addEventListener("pause", () => setPlaying(false));

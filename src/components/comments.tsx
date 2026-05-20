@@ -22,7 +22,7 @@ export default function Comments({ slug }: { slug: string }) {
     fetch(`/api/articles/${slug}/comments`)
       .then((res) => res.json())
       .then((data) => {
-        setComments(Array.isArray(data) ? data : []);
+        setComments(data?.comments ?? []);
         setLoading(false);
       })
       .catch(() => {

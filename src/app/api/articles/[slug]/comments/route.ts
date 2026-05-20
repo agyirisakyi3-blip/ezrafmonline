@@ -38,12 +38,14 @@ export async function GET(
     prisma.comment.count({ where: { articleId: article.id, isApproved: true } }),
   ]);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     comments,
     total,
     page,
     totalPages: Math.ceil(total / PAGE_SIZE),
   });
+  response.headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=300");
+  return response;
 }
 
 export async function POST(

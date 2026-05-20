@@ -7,5 +7,7 @@ export async function GET() {
     orderBy: { sortOrder: "asc" },
   });
 
-  return NextResponse.json(programs);
+  const response = NextResponse.json(programs);
+  response.headers.set("Cache-Control", "public, max-age=0, s-maxage=300, stale-while-revalidate=600");
+  return response;
 }

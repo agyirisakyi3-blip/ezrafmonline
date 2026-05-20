@@ -65,6 +65,9 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://openweathermap.org" />
+        <link rel="preconnect" href="https://api.openweathermap.org" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
         <link rel="alternate" type="application/rss+xml" title="Ezrafmonline RSS" href="/rss.xml" />
         <link rel="sitemap" type="application/xml" title="News Sitemap" href="/news-sitemap.xml" />
         <meta name="geo.region" content="GH" />

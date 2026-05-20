@@ -17,7 +17,7 @@ export async function GET() {
 
   const data = await res.json();
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     city: data.name,
     temp: Math.round(data.main.temp),
     feelsLike: Math.round(data.main.feels_like),
@@ -27,4 +27,6 @@ export async function GET() {
     humidity: data.main.humidity,
     wind: Math.round(data.wind.speed),
   });
+  response.headers.set("Cache-Control", "public, max-age=0, s-maxage=300, stale-while-revalidate=600");
+  return response;
 }

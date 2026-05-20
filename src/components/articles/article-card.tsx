@@ -56,7 +56,7 @@ export function HeroCard({ article }: { article: Article }) {
   );
 }
 
-export function TopStoryCard({ article }: { article: Article }) {
+export function TopStoryCard({ article, priority }: { article: Article; priority?: boolean }) {
   return (
     <Link href={`/articles/${article.slug}`} className="group flex space-x-4">
       <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
@@ -67,6 +67,7 @@ export function TopStoryCard({ article }: { article: Article }) {
             fill
             className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
             sizes="96px"
+            priority={priority}
           />
         ) : (
           <div className="h-full w-full bg-zinc-200" />
@@ -85,7 +86,7 @@ export function TopStoryCard({ article }: { article: Article }) {
   );
 }
 
-export function GridCard({ article }: { article: Article }) {
+export function GridCard({ article, priority }: { article: Article; priority?: boolean }) {
   return (
     <Link
       href={`/articles/${article.slug}`}
@@ -99,6 +100,7 @@ export function GridCard({ article }: { article: Article }) {
             fill
             className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            priority={priority}
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200" />

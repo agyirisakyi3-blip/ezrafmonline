@@ -38,6 +38,7 @@ export default async function AuthorPage({
           <img
             src={author.avatarUrl}
             alt={author.name}
+            loading="lazy"
             className="h-20 w-20 rounded-full object-cover"
           />
         ) : (
@@ -70,7 +71,7 @@ export default async function AuthorPage({
                   <img
                     src={article.featuredImage}
                     alt={article.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
               )}

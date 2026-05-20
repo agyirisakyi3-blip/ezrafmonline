@@ -44,12 +44,12 @@ export const getPublishedArticleBySlug = cache(async (slug: string) => {
   });
 });
 
-export const getPublishedArticles = cache(async (take?: number) => {
+export const getPublishedArticles = cache(async (take = 50) => {
   return prisma.article.findMany({
     where: { status: "published" },
     select: articleListSelect,
     orderBy: { publishedAt: "desc" },
-    ...(take ? { take } : {}),
+    take,
   });
 });
 
@@ -121,8 +121,8 @@ export const getDeeplyRead = cache(async (take = 5) => {
     where: { id: { in: ids.map((r) => r.id) } },
     select: articleSelect,
   });
-  const order = ids.map((r) => r.id);
-  return rows.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+  const orderMap = new Map(ids.map((r, i) => [r.id, i]));
+  return rows.sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0));
 });
 
 export const getRelatedArticles = cache(async (categoryId: string, excludeId: string, take = 5) => {
@@ -148,7 +148,7 @@ export const getHomepageData = cache(async () => {
     prisma.article.findMany({
       where: { status: "published" },
       orderBy: { publishedAt: "desc" },
-      take: 30,
+      take: 20,
       select: articleListSelect,
     }),
     getDeeplyRead(5),
