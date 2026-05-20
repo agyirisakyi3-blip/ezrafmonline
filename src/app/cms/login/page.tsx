@@ -1,11 +1,14 @@
+import { redirect } from "next/navigation";
+
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ reset_token?: string; forgot?: string }>;
+  searchParams: Promise<{ reset_token?: string; forgot?: string; error?: string }>;
 }) {
   const searchParamsResolved = await searchParams;
   const reset_token = searchParamsResolved.reset_token;
   const forgot = searchParamsResolved.forgot;
+  const error = searchParamsResolved.error;
 
   return (
     <div className="flex min-h-screen bg-zinc-50">
@@ -100,15 +103,32 @@ export default async function LoginPage({
                   <p className="text-sm text-zinc-500 mt-1">Sign in to manage your content</p>
                 </div>
 
+                {error && (
+                  <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 flex items-center gap-2.5">
+                    <svg className="h-4 w-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>Invalid email or password. Please try again.</span>
+                  </div>
+                )}
+
                 <form
                   action={async (formData) => {
                     "use server";
                     const { signIn } = await import("@/lib/auth");
-                    await signIn("credentials", {
-                      email: formData.get("email"),
-                      password: formData.get("password"),
-                      redirectTo: "/cms",
-                    });
+                    const { AuthError } = await import("next-auth");
+                    try {
+                      await signIn("credentials", {
+                        email: formData.get("email"),
+                        password: formData.get("password"),
+                        redirectTo: "/cms",
+                      });
+                    } catch (err) {
+                      if (err instanceof AuthError) {
+                        redirect("/cms/login?error=1");
+                      }
+                      throw err;
+                    }
                   }}
                   className="space-y-5"
                 >
