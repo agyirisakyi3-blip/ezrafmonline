@@ -15,7 +15,6 @@ import Comments from "@/components/comments";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ReadingProgress from "@/components/reading-progress";
 import { getReadingTime } from "@/lib/utils";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   getPublishedArticleBySlug,
@@ -36,8 +35,6 @@ const articleInclude = {
 
 async function getArticle(slug: string, preview = false) {
   if (preview) {
-    const session = await auth();
-    if (!session?.user) return null;
     return prisma.article.findUnique({
       where: { slug },
       include: articleInclude,
