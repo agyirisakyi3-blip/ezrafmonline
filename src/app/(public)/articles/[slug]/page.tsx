@@ -15,6 +15,8 @@ import Comments from "@/components/comments";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ReadingProgress from "@/components/reading-progress";
 import { getReadingTime } from "@/lib/utils";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import {
   getPublishedArticleBySlug,
   getRelatedArticles,
@@ -23,13 +25,37 @@ import {
 
 export const revalidate = 60;
 
+const articleInclude = {
+  category: true,
+  author: { select: { id: true, name: true } },
+  seoTitle: true,
+  seoDescription: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
+async function getArticle(slug: string, preview = false) {
+  if (preview) {
+    const session = await auth();
+    if (!session?.user) return null;
+    return prisma.article.findUnique({
+      where: { slug },
+      include: articleInclude,
+    });
+  }
+  return getPublishedArticleBySlug(slug);
+}
+
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getPublishedArticleBySlug(slug);
+  const sp = await searchParams;
+  const article = await getArticle(slug, sp.preview === "1");
   if (!article) return {};
   return siteMetadata({
     title: article.seoTitle || article.title,
@@ -44,12 +70,16 @@ export async function generateMetadata({
 
 export default async function ArticlePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { slug } = await params;
+  const sp = await searchParams;
+  const preview = sp.preview === "1";
 
-  const article = await getPublishedArticleBySlug(slug);
+  const article = await getArticle(slug, preview);
   if (!article) notFound();
 
   const [relatedArticles, sidebarArticles] = await Promise.all([
@@ -61,6 +91,12 @@ export default async function ArticlePage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {preview && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Preview Mode — this article may not be published yet.
+        </div>
+      )}
       <TrackView slug={article.slug} />
       <ReadingProgress />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
