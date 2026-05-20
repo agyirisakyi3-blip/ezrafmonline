@@ -111,6 +111,22 @@ model CitizenSubmission {
   @@index([status, createdAt(sort: Desc)])
 }
 
+model RadioProgram {
+  id          String   @id @default(cuid())
+  title       String
+  host        String?
+  startTime   String   // HH:mm
+  endTime     String   // HH:mm
+  days        String   @default("weekdays") // weekdays, weekends, daily, or comma-separated: mon,tue,wed
+  description String?
+  active      Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
+
 model Ad {
   id        String    @id @default(cuid())
   name      String

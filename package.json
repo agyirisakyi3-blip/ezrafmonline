@@ -10,7 +10,8 @@
     "seed": "tsx prisma/seed.ts",
     "git-update": "pwsh -File git-update.ps1",
     "deploy": "pwsh -File deploy.ps1",
-    "competitors": "tsx scripts/track-competitors.ts"
+    "competitors": "tsx scripts/track-competitors.ts",
+    "seed-radio": "tsx --env-file=.env scripts/seed-radio.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
