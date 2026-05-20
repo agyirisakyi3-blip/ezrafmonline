@@ -86,6 +86,8 @@ model SiteConfig {
   metaPixelId      String?
   weatherApiKey    String?
   weatherCity      String? @default("Accra")
+  liveRadioUrl     String?
+  liveRadioActive  Boolean @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
