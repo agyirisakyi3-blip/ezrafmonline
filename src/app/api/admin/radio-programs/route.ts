@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { title, host, startTime, endTime, days, description, sortOrder } = await req.json();
+    const { title, host, imageUrl, startTime, endTime, days, description, sortOrder } = await req.json();
 
     if (!title?.trim() || !startTime?.trim() || !endTime?.trim()) {
       return NextResponse.json({ error: "Title, start time, and end time are required" }, { status: 400 });
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       data: {
         title: title.trim(),
         host: host?.trim() || null,
+        imageUrl: imageUrl?.trim() || null,
         startTime,
         endTime,
         days: days || "weekdays",
@@ -53,7 +54,7 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const { id, title, host, startTime, endTime, days, description, sortOrder, active } = await req.json();
+    const { id, title, host, imageUrl, startTime, endTime, days, description, sortOrder, active } = await req.json();
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
@@ -64,6 +65,7 @@ export async function PUT(req: Request) {
       data: {
         ...(title !== undefined && { title: title.trim() }),
         ...(host !== undefined && { host: host?.trim() || null }),
+        ...(imageUrl !== undefined && { imageUrl: imageUrl?.trim() || null }),
         ...(startTime !== undefined && { startTime }),
         ...(endTime !== undefined && { endTime }),
         ...(days !== undefined && { days }),

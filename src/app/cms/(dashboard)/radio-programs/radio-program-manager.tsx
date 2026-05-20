@@ -6,6 +6,7 @@ type Program = {
   id: string;
   title: string;
   host: string | null;
+  imageUrl: string | null;
   startTime: string;
   endTime: string;
   days: string;
@@ -17,6 +18,7 @@ type Program = {
 const emptyForm = {
   title: "",
   host: "",
+  imageUrl: "",
   startTime: "06:00",
   endTime: "07:00",
   days: "weekdays",
@@ -52,6 +54,7 @@ export default function RadioProgramManager({
     setForm({
       title: p.title,
       host: p.host ?? "",
+      imageUrl: p.imageUrl ?? "",
       startTime: p.startTime,
       endTime: p.endTime,
       days: p.days,
@@ -76,9 +79,8 @@ export default function RadioProgramManager({
       const isEdit = editingId !== null;
       const url = "/api/admin/radio-programs";
       const method = isEdit ? "PUT" : "POST";
-      const body = isEdit
-        ? { id: editingId, ...form, host: form.host || null, description: form.description || null }
-        : { ...form, host: form.host || null, description: form.description || null };
+      const sanitized = { ...form, host: form.host || null, imageUrl: form.imageUrl || null, description: form.description || null };
+      const body = isEdit ? { id: editingId, ...sanitized } : sanitized;
 
       const res = await fetch(url, {
         method,
@@ -208,6 +210,47 @@ export default function RadioProgramManager({
             </div>
           </div>
 
+          <div>
+            <label className="block text-xs font-medium text-zinc-600 mb-1">Image</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={form.imageUrl}
+                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Paste image URL..."
+              />
+              <span className="text-xs text-zinc-400">or</span>
+              <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50 transition-colors">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                Upload
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const fd = new FormData();
+                    fd.append("file", file);
+                    const res = await fetch("/api/upload", { method: "POST", body: fd });
+                    if (res.ok) {
+                      const data = await res.json();
+                      setForm((prev) => ({ ...prev, imageUrl: data.url }));
+                    }
+                  }}
+                />
+              </label>
+            </div>
+            {form.imageUrl && (
+              <div className="mt-2 relative h-20 w-20 rounded-lg overflow-hidden border border-zinc-200 bg-zinc-50">
+                <img src={form.imageUrl} alt="" className="h-full w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              </div>
+            )}
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-4">
             <div>
               <label className="block text-xs font-medium text-zinc-600 mb-1">Start Time *</label>
@@ -291,24 +334,31 @@ export default function RadioProgramManager({
             }`}
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="font-semibold text-zinc-900 text-sm">{p.title}</h3>
-                  {!p.active && (
-                    <span className="text-[10px] font-medium text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded">inactive</span>
-                  )}
-                </div>
-                {p.host && (
-                  <p className="text-xs text-zinc-500 mb-1">{p.host}</p>
+              <div className="flex-1 min-w-0 flex items-start gap-3">
+                {p.imageUrl && (
+                  <div className="h-12 w-12 rounded-lg overflow-hidden border border-zinc-200 bg-zinc-50 shrink-0 mt-0.5">
+                    <img src={p.imageUrl} alt="" className="h-full w-full object-cover" />
+                  </div>
                 )}
-                <div className="flex items-center gap-3 text-xs text-zinc-400">
-                  <span className="font-mono font-medium text-zinc-600">{p.startTime} – {p.endTime}</span>
-                  <span className="bg-zinc-100 px-1.5 py-0.5 rounded text-[10px] font-medium text-zinc-500">
-                    {formatDays(p.days)}
-                  </span>
-                  {p.description && (
-                    <span className="text-zinc-400 truncate hidden sm:inline">{p.description}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="font-semibold text-zinc-900 text-sm">{p.title}</h3>
+                    {!p.active && (
+                      <span className="text-[10px] font-medium text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded">inactive</span>
+                    )}
+                  </div>
+                  {p.host && (
+                    <p className="text-xs text-zinc-500 mb-1">{p.host}</p>
                   )}
+                  <div className="flex items-center gap-3 text-xs text-zinc-400">
+                    <span className="font-mono font-medium text-zinc-600">{p.startTime} – {p.endTime}</span>
+                    <span className="bg-zinc-100 px-1.5 py-0.5 rounded text-[10px] font-medium text-zinc-500">
+                      {formatDays(p.days)}
+                    </span>
+                    {p.description && (
+                      <span className="text-zinc-400 truncate hidden sm:inline">{p.description}</span>
+                    )}
+                  </div>
                 </div>
               </div>
 

@@ -115,6 +115,7 @@ model RadioProgram {
   id          String   @id @default(cuid())
   title       String
   host        String?
+  imageUrl    String?
   startTime   String   // HH:mm
   endTime     String   // HH:mm
   days        String   @default("weekdays") // weekdays, weekends, daily, or comma-separated: mon,tue,wed

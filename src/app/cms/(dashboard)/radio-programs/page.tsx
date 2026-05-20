@@ -27,6 +27,7 @@ export default async function RadioProgramsPage() {
           id: p.id,
           title: p.title,
           host: p.host,
+          imageUrl: p.imageUrl,
           startTime: p.startTime,
           endTime: p.endTime,
           days: p.days,

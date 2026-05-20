@@ -6,6 +6,7 @@ type Program = {
   id: string;
   title: string;
   host: string | null;
+  imageUrl: string | null;
   startTime: string;
   endTime: string;
   days: string;
@@ -91,8 +92,18 @@ export default function RadioSchedule() {
   return (
     <div>
       {currentProgram && (
-        <div className="bg-primary text-white rounded-2xl p-5 mb-5 flex items-center gap-4 shadow-lg shadow-primary/20">
-          <span className="h-3 w-3 rounded-full bg-red-400 animate-pulse shrink-0 shadow-lg shadow-red-400/50" />
+        <div className="bg-gradient-to-r from-primary to-primary-dark text-white rounded-2xl p-5 mb-5 flex items-center gap-4 shadow-lg shadow-primary/20">
+          {currentProgram.imageUrl ? (
+            <div className="h-16 w-16 rounded-xl overflow-hidden border-2 border-white/20 shrink-0 shadow-lg">
+              <img src={currentProgram.imageUrl} alt="" className="h-full w-full object-cover" />
+            </div>
+          ) : (
+            <span className="h-16 w-16 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+              <svg className="h-8 w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+              </svg>
+            </span>
+          )}
           <div>
             <p className="text-xs text-primary/80 font-semibold uppercase tracking-wider">On Air Now</p>
             <p className="font-bold text-lg">{currentProgram.title}</p>
@@ -129,6 +140,11 @@ export default function RadioSchedule() {
                   <div className="h-8 w-1 rounded-full bg-primary shrink-0" />
                 )}
 
+                {p.imageUrl && (
+                  <div className="h-12 w-12 rounded-lg overflow-hidden border border-zinc-100 bg-zinc-50 shrink-0">
+                    <img src={p.imageUrl} alt="" className="h-full w-full object-cover" />
+                  </div>
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className={`font-semibold text-sm ${active ? "text-primary" : "text-zinc-900"}`}>
