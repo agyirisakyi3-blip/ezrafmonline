@@ -53,6 +53,9 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `document.documentElement.classList.toggle('dark',localStorage.getItem('theme')==='dark'||(!localStorage.getItem('theme')&&window.matchMedia('(prefers-color-scheme:dark)').matches))`
+        }} />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#256b12" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

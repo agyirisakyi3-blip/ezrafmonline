@@ -46,7 +46,7 @@ function Slide({ article, priority }: { article: Article; priority: boolean }) {
               {article.category.name}
             </span>
           )}
-          <h1 className="text-lg md:text-4xl font-bold mb-2 text-white leading-tight line-clamp-3 md:line-clamp-none">
+          <h1 className="text-lg md:text-2xl lg:text-4xl font-bold mb-2 text-white leading-tight line-clamp-3 md:line-clamp-none">
             {article.title}
           </h1>
           <p className="hidden md:block text-sm text-white/70 line-clamp-2 max-w-2xl">

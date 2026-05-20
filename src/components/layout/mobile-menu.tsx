@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTheme } from "@/components/theme-provider";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -14,120 +15,114 @@ const navLinks = [
   { label: "Opinion", href: "/categories/opinion" },
   { label: "Videos", href: "/categories/videos" },
   { label: "Elections", href: "/categories/elections" },
+  { label: "Live TV", href: "/live/tv" },
+  { label: "Live Radio", href: "/live/radio" },
 ];
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
-  const [liveOpen, setLiveOpen] = useState(false);
+  const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
-        className="p-2 text-white/80 hover:text-white"
-        aria-label="Open menu"
+        onClick={() => setOpen(!open)}
+        className="flex h-10 w-10 items-center justify-center rounded-lg text-white/80 hover:text-white"
+        aria-label="Toggle menu"
       >
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        {open ? (
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        )}
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50">
-          <div
-            className="fixed inset-0 bg-black/50"
+        <div
+          className="fixed inset-0 top-0 z-40 bg-black/50"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-xl transition-transform duration-300 dark:bg-zinc-900 ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-zinc-200 p-4 dark:border-zinc-800">
+          <span className="text-sm font-bold text-zinc-900 dark:text-white">Menu</span>
+          <button
             onClick={() => setOpen(false)}
-          />
-          <div className="fixed inset-y-0 right-0 w-72 max-w-full bg-white shadow-xl">
-            <div className="flex items-center justify-between bg-primary px-4 h-[72px]">
-              <Image src="/logo.png" alt="Ezrafmonline" width={140} height={28} className="h-7 w-auto" />
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-white"
+            aria-label="Close menu"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <nav className="overflow-y-auto p-4 pb-20">
+          <ul className="space-y-1">
+            {navLinks.map((link) => {
+              const active = pathname === link.href || pathname.startsWith(link.href + "/");
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={`block rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+                      active
+                        ? "bg-primary/10 text-primary"
+                        : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mt-6 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+            <div className="flex items-center justify-between px-4">
+              <span className="text-sm text-zinc-500 dark:text-zinc-400">Dark Mode</span>
               <button
-                onClick={() => setOpen(false)}
-                className="p-2 text-white/80 hover:text-white"
-                aria-label="Close menu"
+                onClick={toggleTheme}
+                className={`relative h-6 w-11 rounded-full transition-colors ${
+                  theme === "dark" ? "bg-primary" : "bg-zinc-300"
+                }`}
+                aria-label="Toggle dark mode"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <span
+                  className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                    theme === "dark" ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
               </button>
             </div>
-            <nav className="p-4 space-y-1">
-              {navLinks.map((link) => (
-                <MobileNavLink
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </MobileNavLink>
-              ))}
-
-              {/* Live section */}
-              <div>
-                <button
-                  onClick={() => setLiveOpen(!liveOpen)}
-                  className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-primary transition-colors"
-                >
-                  <span>Live</span>
-                  <svg
-                    className={`h-4 w-4 transition-transform ${liveOpen ? "rotate-180" : ""}`}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-                {liveOpen && (
-                  <div className="ml-4 space-y-1 border-l-2 border-primary/20 pl-3">
-                    <MobileNavLink href="/live/tv" onClick={() => setOpen(false)}>
-                      <span className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                          <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="6 3 20 12 6 21 6 3" />
-                          </svg>
-                        </span>
-                        Live TV
-                      </span>
-                    </MobileNavLink>
-                    <MobileNavLink href="/live/radio" onClick={() => setOpen(false)}>
-                      <span className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                          <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="6 3 20 12 6 21 6 3" />
-                          </svg>
-                        </span>
-                        Live Radio
-                      </span>
-                    </MobileNavLink>
-                  </div>
-                )}
-              </div>
-            </nav>
           </div>
-        </div>
-      )}
-    </>
-  );
-}
 
-function MobileNavLink({
-  href,
-  onClick,
-  children,
-}: {
-  href: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="block rounded-lg px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-primary transition-colors"
-    >
-      {children}
-    </Link>
+          <div className="mt-4 px-4">
+            <Link
+              href="/search"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-lg border border-zinc-200 px-4 py-2.5 text-sm text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-white"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              Search
+            </Link>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }

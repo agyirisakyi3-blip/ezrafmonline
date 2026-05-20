@@ -19,6 +19,11 @@ export default function CookieConsent() {
     setVisible(false);
   };
 
+  const reject = () => {
+    try { localStorage.setItem("cookie-consent", "rejected"); } catch {}
+    setVisible(false);
+  };
+
   if (!visible) return null;
 
   return (
@@ -28,6 +33,12 @@ export default function CookieConsent() {
           This site uses cookies to improve your experience. By continuing, you agree to our use of cookies.
         </p>
         <div className="flex gap-3 shrink-0">
+          <button
+            onClick={reject}
+            className="rounded-lg border border-zinc-600 px-5 py-2 text-sm font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+          >
+            Reject
+          </button>
           <button
             onClick={accept}
             className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-primary-dark transition-colors"

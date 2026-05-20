@@ -8,6 +8,21 @@ import { getHomepageData, getPopularArticles } from "@/lib/queries";
 import AdSlot from "@/components/ads/ad-slot";
 import NewsletterForm from "@/components/newsletter-form";
 import JsonLd from "@/components/ui/json-ld";
+import BreakingTicker from "@/components/breaking-ticker";
+import { getPublishedArticles } from "@/lib/queries";
+
+const categoryColors: Record<string, { bg: string; dot: string }> = {
+  News: { bg: "bg-blue-50 dark:bg-blue-950/20", dot: "bg-blue-600" },
+  Politics: { bg: "bg-purple-50 dark:bg-purple-950/20", dot: "bg-purple-600" },
+  Entertainment: { bg: "bg-pink-50 dark:bg-pink-950/20", dot: "bg-pink-600" },
+  Sports: { bg: "bg-green-50 dark:bg-green-950/20", dot: "bg-green-600" },
+  Business: { bg: "bg-amber-50 dark:bg-amber-950/20", dot: "bg-amber-600" },
+  Opinion: { bg: "bg-rose-50 dark:bg-rose-950/20", dot: "bg-rose-600" },
+  Videos: { bg: "bg-indigo-50 dark:bg-indigo-950/20", dot: "bg-indigo-600" },
+  Elections: { bg: "bg-orange-50 dark:bg-orange-950/20", dot: "bg-orange-600" },
+};
+
+const defaultColor = { bg: "bg-zinc-50 dark:bg-zinc-900", dot: "bg-primary" };
 
 export const metadata: Metadata = siteMetadata({
   title: "Home",
@@ -25,11 +40,14 @@ async function getCategories() {
 }
 
 export default async function HomePage() {
-  const [{ articles, deeplyRead, editorPicks }, categories, popularArticles] = await Promise.all([
+  const [{ articles, deeplyRead, editorPicks }, categories, popularArticles, breakingNews] = await Promise.all([
     getHomepageData(),
     getCategories(),
     getPopularArticles(3),
+    getPublishedArticles(5),
   ]);
+
+  const breakingArticles = breakingNews.slice(0, 5);
 
   const sliderArticles = articles.slice(0, 5);
   const remaining = articles.slice(5);
@@ -72,6 +90,7 @@ export default async function HomePage() {
         },
       }} />
       <JsonLd data={organizationJsonLd()} />
+      <BreakingTicker articles={breakingArticles} />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
@@ -123,11 +142,12 @@ export default async function HomePage() {
           cats.length > 0 && (
             <section
               key={name}
-              className="bg-zinc-50 border-y border-zinc-100 py-8"
+              className={`${categoryColors[name]?.bg ?? defaultColor.bg} border-y border-zinc-100 py-8`}
             >
               <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-zinc-900 border-l-4 border-primary pl-3">
+                  <h2 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
+                    <span className={`inline-block w-3 h-3 rounded-full ${categoryColors[name]?.dot ?? defaultColor.dot}`} />
                     {name}
                   </h2>
                   <Link

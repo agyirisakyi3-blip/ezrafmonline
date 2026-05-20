@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 export default function ShareButtons({ url, title }: { url: string; title: string }) {
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
@@ -47,10 +49,13 @@ export default function ShareButtons({ url, title }: { url: string; title: strin
     },
   ];
 
+  const [copied, setCopied] = useState(false);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      alert("Link copied!");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       // fallback
     }
@@ -76,6 +81,9 @@ export default function ShareButtons({ url, title }: { url: string; title: strin
           {link.svg}
         </button>
       ))}
+      {copied && (
+        <span className="text-xs text-primary font-medium animate-pulse">Copied!</span>
+      )}
     </div>
   );
 }

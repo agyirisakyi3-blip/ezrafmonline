@@ -17,3 +17,9 @@ export function truncate(text: string, length: number): string {
   if (text.length <= length) return text;
   return text.substring(0, length).replace(/\s+\S*$/, "") + "...";
 }
+
+export function getReadingTime(content: string): number {
+  const text = content.replace(/<[^>]*>/g, "");
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / 200));
+}

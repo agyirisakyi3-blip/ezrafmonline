@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getReadingTime } from "@/lib/utils";
 
 interface Article {
   id: string;
   title: string;
   slug: string;
   excerpt: string | null;
+  content: string;
   featuredImage: string | null;
   publishedAt: Date | null;
   viewCount?: number;
@@ -43,8 +45,9 @@ export function HeroCard({ article }: { article: Article }) {
             {article.excerpt}
           </p>
           <div className="hidden md:flex items-center gap-3 mt-2 text-xs text-white/50">
+            <span>{getReadingTime(article.content)} min read</span>
             {article.viewCount !== undefined && (
-              <span>{article.viewCount.toLocaleString()} views</span>
+              <span>&middot; {article.viewCount.toLocaleString()} views</span>
             )}
           </div>
         </div>
@@ -73,9 +76,10 @@ export function TopStoryCard({ article }: { article: Article }) {
         <h3 className="text-sm font-semibold text-zinc-900 line-clamp-3 group-hover:text-primary transition-colors duration-300">
           {article.title}
         </h3>
-        {article.viewCount !== undefined && (
-          <p className="mt-0.5 text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
-        )}
+        <p className="mt-0.5 text-[10px] text-zinc-400">
+          {getReadingTime(article.content)} min read
+          {article.viewCount !== undefined && ` · ${article.viewCount.toLocaleString()} views`}
+        </p>
       </div>
     </Link>
   );
@@ -100,7 +104,7 @@ export function GridCard({ article }: { article: Article }) {
           <div className="h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200" />
         )}
       </div>
-      <div className="p-2">
+      <div className="p-3">
         {article.category && (
           <span className="mb-1 inline-block bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5">
             {article.category.name}
@@ -109,9 +113,10 @@ export function GridCard({ article }: { article: Article }) {
         <h3 className="font-semibold text-zinc-900 line-clamp-4 text-sm group-hover:text-primary transition-colors duration-300">
           {article.title}
         </h3>
-        {article.viewCount !== undefined && (
-          <p className="mt-1 text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
-        )}
+        <p className="mt-1 text-[10px] text-zinc-400">
+          {getReadingTime(article.content)} min read
+          {article.viewCount !== undefined && ` · ${article.viewCount.toLocaleString()} views`}
+        </p>
       </div>
     </Link>
   );
@@ -140,9 +145,10 @@ export function SidebarCard({
             {article.category.name}
           </span>
         )}
-        {article.viewCount !== undefined && (
-          <p className="text-[10px] text-zinc-400">{article.viewCount.toLocaleString()} views</p>
-        )}
+        <p className="text-[10px] text-zinc-400">
+          {getReadingTime(article.content)} min read
+          {article.viewCount !== undefined && ` · ${article.viewCount.toLocaleString()} views`}
+        </p>
       </div>
       <div className="relative w-20 h-16 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
         {article.featuredImage ? (

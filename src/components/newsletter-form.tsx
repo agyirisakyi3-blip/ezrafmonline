@@ -47,7 +47,12 @@ export default function NewsletterForm() {
           disabled={status === "loading"}
           className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark transition-colors disabled:opacity-50 shrink-0"
         >
-          {status === "loading" ? "..." : "Subscribe"}
+          {status === "loading" ? (
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+              <path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" className="opacity-75" />
+            </svg>
+          ) : "Subscribe"}
         </button>
       </div>
       {message && (

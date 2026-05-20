@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./mobile-menu";
 import DateTimeDisplay from "./date-time";
 import { useTheme } from "@/components/theme-provider";
@@ -22,8 +22,45 @@ const navLinks = [
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [liveOpen, setLiveOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const liveRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (liveRef.current && !liveRef.current.contains(e.target as Node)) {
+        setLiveOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setLiveOpen(false);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -79,16 +116,20 @@ export default function Header() {
                 {link.label}
               </NavLink>
             ))}
-            <div className="relative group">
-              <button className="relative text-white/90 hover:text-white font-medium text-sm px-2.5 py-1.5 transition-colors flex items-center gap-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all group-hover:after:w-full">
+            <div className="relative" ref={liveRef}>
+              <button
+                onClick={() => setLiveOpen(!liveOpen)}
+                className="relative text-white/90 hover:text-white font-medium text-sm px-2.5 py-1.5 transition-colors flex items-center gap-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all hover:after:w-full"
+              >
                 Live
-                <svg className="h-3 w-3 transition-transform group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <svg className={`h-3 w-3 transition-transform ${liveOpen ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </button>
-              <div className="absolute top-full right-0 mt-1 w-48 rounded-lg border border-zinc-200 bg-white py-2 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-1 group-hover:translate-y-0">
+              <div className={`absolute top-full right-0 mt-1 w-48 rounded-lg border border-zinc-200 bg-white py-2 shadow-lg transition-all ${liveOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-1 pointer-events-none"}`}>
                 <a
                   href="/live/tv"
+                  onClick={() => setLiveOpen(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 hover:text-primary transition-colors"
                 >
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
@@ -100,6 +141,7 @@ export default function Header() {
                 </a>
                 <a
                   href="/live/radio"
+                  onClick={() => setLiveOpen(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 hover:text-primary transition-colors"
                 >
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
@@ -114,8 +156,8 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-3 shrink-0">
-            <Link
-              href="/search"
+            <button
+              onClick={() => setSearchOpen(true)}
               className="text-white/80 hover:text-white transition-colors"
               aria-label="Search"
             >
@@ -123,7 +165,7 @@ export default function Header() {
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
               </svg>
-            </Link>
+            </button>
             <button
               onClick={toggleTheme}
               className="text-white/80 hover:text-white transition-colors"
@@ -162,6 +204,51 @@ export default function Header() {
           <MobileMenu />
         </div>
       </div>
+      {/* Search overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-20 backdrop-blur-sm">
+          <div className="w-full max-w-xl mx-4 bg-white rounded-xl shadow-2xl overflow-hidden dark:bg-zinc-900">
+            <div className="flex items-center border-b border-zinc-200 dark:border-zinc-800">
+              <svg className="ml-4 h-5 w-5 shrink-0 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                    setSearchOpen(false);
+                    setSearchQuery("");
+                  }
+                }}
+                placeholder="Search articles..."
+                className="flex-1 border-0 bg-transparent px-3 py-4 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none dark:text-white"
+              />
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="mr-3 flex h-7 w-7 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-white"
+                aria-label="Close search"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="px-4 py-2 text-xs text-zinc-400 flex items-center justify-between">
+              <span>Press Enter to search</span>
+              <span className="flex items-center gap-1">
+                <kbd className="rounded border border-zinc-300 px-1.5 py-0.5 text-[10px] font-mono dark:border-zinc-700">ESC</kbd>
+                <span>to close</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
     </header>
   );
 }

@@ -13,6 +13,8 @@ import ShareButtons from "@/components/share-buttons";
 import NewsletterForm from "@/components/newsletter-form";
 import Comments from "@/components/comments";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
+import ReadingProgress from "@/components/reading-progress";
+import { getReadingTime } from "@/lib/utils";
 import {
   getPublishedArticleBySlug,
   getRelatedArticles,
@@ -60,6 +62,7 @@ export default async function ArticlePage({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <TrackView slug={article.slug} />
+      <ReadingProgress />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <article className="lg:col-span-2">
           <Breadcrumbs
@@ -91,6 +94,8 @@ export default async function ArticlePage({
             )}
             <span>&middot;</span>
             <time>{article.publishedAt && formatDateLong(article.publishedAt)}</time>
+            <span>&middot;</span>
+            <span>{getReadingTime(article.content)} min read</span>
             <span>&middot;</span>
             <span>{article.viewCount.toLocaleString()} views</span>
           </div>
