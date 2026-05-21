@@ -11,7 +11,9 @@
     "git-update": "pwsh -File git-update.ps1",
     "deploy": "pwsh -File deploy.ps1",
     "competitors": "tsx scripts/track-competitors.ts",
-    "seed-radio": "tsx --env-file=.env scripts/seed-radio.ts"
+    "seed-radio": "tsx --env-file=.env scripts/seed-radio.ts",
+    "setup": "pwsh -File scripts/setup.ps1",
+    "run-all": "pwsh -File scripts/run-all.ps1"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

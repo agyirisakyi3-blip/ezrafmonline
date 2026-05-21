@@ -17,6 +17,7 @@ const articleSelect = {
   featuredImage: true,
   publishedAt: true,
   viewCount: true,
+  sortOrder: true,
   category: { select: { name: true, slug: true } },
 } satisfies Prisma.ArticleSelect;
 
@@ -29,6 +30,7 @@ const articleListSelect = {
   featuredImage: true,
   publishedAt: true,
   viewCount: true,
+  sortOrder: true,
   category: { select: { name: true, slug: true } },
   author: { select: { id: true, name: true } },
 } satisfies Prisma.ArticleSelect;
@@ -54,7 +56,7 @@ export const getPublishedArticles = unstable_cache(
     return prisma.article.findMany({
       where: { status: "published" },
       select: articleListSelect,
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
       take,
     });
   }),
@@ -66,7 +68,7 @@ export const getArticlesByCategory = cache(async (slug: string, page = 1, perPag
   return prisma.article.findMany({
     where: { status: "published", category: { slug } },
     select: articleListSelect,
-    orderBy: { publishedAt: "desc" },
+    orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
     skip: (page - 1) * perPage,
     take: perPage,
   });
@@ -161,7 +163,7 @@ export const getHomepageData = unstable_cache(
     const [articles, deeplyRead, editorPicks] = await Promise.all([
       prisma.article.findMany({
         where: { status: "published" },
-        orderBy: { publishedAt: "desc" },
+        orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
         take: 20,
         select: articleListSelect,
       }),

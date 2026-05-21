@@ -72,6 +72,7 @@ model Article {
   featuredImage   String?
   status          ArticleStatus @default(draft)
   isEditorPick    Boolean       @default(false)
+  sortOrder       Int           @default(0)
   viewCount       Int           @default(0)
   seoTitle        String?
   seoDescription  String?
@@ -89,6 +90,7 @@ model Article {
   @@index([status, publishedAt(sort: Desc)])
   @@index([categoryId, status, publishedAt(sort: Desc)])
   @@index([isEditorPick, status, publishedAt(sort: Desc)])
+  @@index([sortOrder, publishedAt(sort: Desc)])
   @@index([status, viewCount(sort: Desc)])
   @@index([publishedAt(sort: Desc)])
 }

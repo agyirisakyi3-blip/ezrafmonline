@@ -30,6 +30,7 @@ export default async function EditArticlePage({
           featuredImage: article.featuredImage ?? "",
           status: article.status,
           isEditorPick: article.isEditorPick,
+          sortOrder: article.sortOrder,
           seoTitle: article.seoTitle ?? "",
           seoDescription: article.seoDescription ?? "",
           categoryId: article.categoryId ?? "",

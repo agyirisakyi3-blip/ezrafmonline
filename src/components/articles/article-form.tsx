@@ -26,6 +26,7 @@ export default function ArticleForm({
     featuredImage: string;
     status: string;
     isEditorPick: boolean;
+    sortOrder: number;
     seoTitle: string;
     seoDescription: string;
     categoryId: string;
@@ -47,6 +48,9 @@ export default function ArticleForm({
   );
   const [isEditorPick, setIsEditorPick] = useState(
     article?.isEditorPick ?? false
+  );
+  const [sortOrder, setSortOrder] = useState(
+    article?.sortOrder ?? 0
   );
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -104,10 +108,11 @@ export default function ArticleForm({
     featuredImage,
     status,
     isEditorPick,
+    sortOrder,
     categoryId: categoryId || null,
     seoTitle: seoTitle || null,
     seoDescription: seoDescription || null,
-  }), [title, slug, excerpt, content, featuredImage, status, isEditorPick, categoryId, seoTitle, seoDescription]);
+  }), [title, slug, excerpt, content, featuredImage, status, isEditorPick, sortOrder, categoryId, seoTitle, seoDescription]);
 
   useEffect(() => {
     if (!article?.id) return;
@@ -137,6 +142,7 @@ export default function ArticleForm({
       featuredImage,
       status,
       isEditorPick,
+      sortOrder,
       categoryId: categoryId || null,
       seoTitle: seoTitle || null,
       seoDescription: seoDescription || null,
@@ -303,6 +309,19 @@ export default function ArticleForm({
                 <p className="text-xs text-zinc-400">Feature this article in the editors&apos; picks section</p>
               </div>
             </label>
+            <div>
+              <label className="block text-xs font-medium text-zinc-500 mb-1 uppercase tracking-wider">
+                Sort Order
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(Number(e.target.value))}
+                className="block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
+              />
+              <p className="text-xs text-zinc-400 mt-1">Lower numbers appear first (0 = default)</p>
+            </div>
           </div>
 
           {/* Featured Image */}
