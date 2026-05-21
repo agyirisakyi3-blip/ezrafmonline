@@ -13,7 +13,8 @@ export async function POST(req: Request) {
   }
 
   const ip = req.headers.get("x-forwarded-for") ?? "upload";
-  if (!checkRateLimit(`upload:${ip}`, 30, 60_000)) {
+  const allowed = await checkRateLimit(`upload:${ip}`, 30, 60_000);
+  if (!allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
@@ -63,12 +64,15 @@ export async function POST(req: Request) {
 
   const filename = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}${ext}`;
 
-  // Use /tmp/uploads on Vercel (serverless writable), public/uploads locally
-  const isVercel = !!process.env.VERCEL;
-  const uploadDir = isVercel
-    ? path.join("/tmp", "uploads")
-    : path.join(process.cwd(), "public", "uploads");
+  // Use Vercel Blob on production, local filesystem for development
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  if (blobToken) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(filename, buffer, { access: "public", token: blobToken });
+    return NextResponse.json({ url: blob.url });
+  }
 
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
   await mkdir(uploadDir, { recursive: true });
   await writeFile(path.join(uploadDir, filename), buffer);
 

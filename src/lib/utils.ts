@@ -26,5 +26,8 @@ export function getReadingTime(content: string): number {
 
 export function imageUrl(url: string | null | undefined): string {
   if (!url) return "";
+  // If it's already an absolute URL (Vercel Blob, external), return as-is
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  // Fix legacy local /uploads/ paths to go through the proxy
   return url.replace(/^\/uploads\//, "/api/uploads/");
 }
