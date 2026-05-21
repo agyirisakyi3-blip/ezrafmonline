@@ -23,3 +23,8 @@ export function getReadingTime(content: string): number {
   const wordCount = text.split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(wordCount / 200));
 }
+
+export function imageUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  return url.replace(/^\/uploads\//, "/api/uploads/");
+}

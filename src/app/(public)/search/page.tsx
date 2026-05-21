@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { formatDate } from "@/lib/utils";
+import { formatDate, imageUrl } from "@/lib/utils";
 import { siteMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = siteMetadata({
@@ -135,7 +135,7 @@ export default async function SearchPage({
               {article.featuredImage && (
                 <div className="relative w-full sm:w-44 h-32 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
                   <Image
-                    src={article.featuredImage}
+                    src={imageUrl(article.featuredImage)}
                     alt={article.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

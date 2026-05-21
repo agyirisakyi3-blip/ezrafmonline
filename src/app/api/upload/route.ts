@@ -62,10 +62,15 @@ export async function POST(req: Request) {
   }
 
   const filename = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+  // Use /tmp/uploads on Vercel (serverless writable), public/uploads locally
+  const isVercel = !!process.env.VERCEL;
+  const uploadDir = isVercel
+    ? path.join("/tmp", "uploads")
+    : path.join(process.cwd(), "public", "uploads");
 
   await mkdir(uploadDir, { recursive: true });
   await writeFile(path.join(uploadDir, filename), buffer);
 
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  return NextResponse.json({ url: `/api/uploads/${filename}` });
 }

@@ -14,7 +14,7 @@ import NewsletterForm from "@/components/newsletter-form";
 import Comments from "@/components/comments";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import ReadingProgress from "@/components/reading-progress";
-import { getReadingTime } from "@/lib/utils";
+import { getReadingTime, imageUrl } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 import {
   getPublishedArticleBySlug,
@@ -58,7 +58,7 @@ export async function generateMetadata({
     title: article.seoTitle || article.title,
     description: article.seoDescription || article.excerpt || "",
     path: `/articles/${article.slug}`,
-    image: article.featuredImage,
+    image: imageUrl(article.featuredImage),
     publishedAt: article.publishedAt,
     updatedAt: article.updatedAt,
     author: article.author?.name,
@@ -136,7 +136,7 @@ export default async function ArticlePage({
           {article.featuredImage && (
             <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-zinc-100">
               <Image
-                src={article.featuredImage}
+                src={article.featuredImage.replace(/^\/uploads\//, "/api/uploads/")}
                 alt={article.title}
                 fill
                 className="object-cover"
@@ -167,7 +167,7 @@ export default async function ArticlePage({
             title: article.title,
             description: article.excerpt || article.title,
             url: `${process.env.AUTH_URL || "http://localhost:3001"}/articles/${article.slug}`,
-            image: article.featuredImage,
+            image: imageUrl(article.featuredImage),
             publishedAt: article.publishedAt || article.createdAt,
             updatedAt: article.updatedAt,
             author: article.author?.name,
@@ -198,7 +198,7 @@ export default async function ArticlePage({
                   <Link key={a.id} href={`/articles/${a.slug}`} className="group flex gap-4">
                     {a.featuredImage && (
                       <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded bg-zinc-100">
-                        <img src={a.featuredImage} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                        <img src={imageUrl(a.featuredImage)} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">

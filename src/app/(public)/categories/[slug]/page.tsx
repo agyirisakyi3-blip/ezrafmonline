@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { formatDate } from "@/lib/utils";
+import { formatDate, imageUrl } from "@/lib/utils";
 import { siteMetadata } from "@/lib/seo";
 import { getCategoryBySlug, getArticlesByCategory } from "@/lib/queries";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
@@ -74,7 +74,7 @@ export default async function CategoryPage({
               {article.featuredImage && (
                 <div className="relative w-full sm:w-56 h-40 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
                   <Image
-                    src={article.featuredImage}
+                    src={imageUrl(article.featuredImage)}
                     alt={article.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

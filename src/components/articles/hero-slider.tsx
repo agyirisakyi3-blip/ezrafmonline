@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { imageUrl } from "@/lib/utils";
 
 interface Article {
   id: string;
@@ -28,7 +29,7 @@ function Slide({ article, priority }: { article: Article; priority: boolean }) {
     >
       {article.featuredImage ? (
         <Image
-          src={article.featuredImage}
+          src={imageUrl(article.featuredImage)}
           alt={article.title}
           fill
           className="object-cover object-top"

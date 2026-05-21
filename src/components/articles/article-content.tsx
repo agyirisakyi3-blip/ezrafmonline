@@ -7,6 +7,9 @@ export default function ArticleContent({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
 
+  // Fix legacy /uploads/ URLs to go through the API proxy (Vercel compatibility)
+  const processedHtml = html.replace(/src="\/uploads\//g, 'src="/api/uploads/');
+
   const handleClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (target.tagName === "IMG" && target.parentElement?.tagName !== "PICTURE") {
@@ -20,7 +23,7 @@ export default function ArticleContent({ html }: { html: string }) {
         ref={ref}
         onClick={handleClick}
         className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:text-zinc-900 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:cursor-pointer prose-img:transition-opacity hover:prose-img:opacity-90"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: processedHtml }}
       />
       {lightbox && (
         <ImageLightbox

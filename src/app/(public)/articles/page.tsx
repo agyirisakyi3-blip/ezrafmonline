@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDate } from "@/lib/utils";
+import { formatDate, imageUrl } from "@/lib/utils";
 import { siteMetadata } from "@/lib/seo";
 import { getPublishedArticles } from "@/lib/queries";
 
@@ -33,7 +33,7 @@ export default async function ArticlesPage() {
               {article.featuredImage && (
                 <div className="w-full sm:w-56 h-40 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
                   <img
-                    src={article.featuredImage}
+                    src={imageUrl(article.featuredImage)}
                     alt={article.title}
                     loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />

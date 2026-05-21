@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDate } from "@/lib/utils";
+import { formatDate, imageUrl } from "@/lib/utils";
 import { siteMetadata } from "@/lib/seo";
 import { getAuthorById } from "@/lib/queries";
 
@@ -69,7 +69,7 @@ export default async function AuthorPage({
               {article.featuredImage && (
                 <div className="w-full sm:w-48 h-32 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
                   <img
-                    src={article.featuredImage}
+                    src={imageUrl(article.featuredImage)}
                     alt={article.title}
                     loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />

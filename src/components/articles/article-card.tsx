@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getReadingTime } from "@/lib/utils";
+import { getReadingTime, imageUrl } from "@/lib/utils";
 
 interface Article {
   id: string;
@@ -20,7 +20,7 @@ export function HeroCard({ article }: { article: Article }) {
     <section className="relative h-[240px] md:h-[500px] w-full overflow-hidden rounded-none md:rounded-lg bg-zinc-800">
       {article.featuredImage ? (
         <Image
-          src={article.featuredImage}
+          src={imageUrl(article.featuredImage)}
           alt={article.title}
           fill
           className="object-cover object-top"
@@ -62,7 +62,7 @@ export function TopStoryCard({ article, priority }: { article: Article; priority
       <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
         {article.featuredImage ? (
           <Image
-            src={article.featuredImage}
+            src={imageUrl(article.featuredImage)}
             alt={article.title}
             fill
             className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
@@ -95,7 +95,7 @@ export function GridCard({ article, priority }: { article: Article; priority?: b
       <div className="relative h-32 w-full overflow-hidden rounded-t-md bg-zinc-100">
         {article.featuredImage ? (
           <Image
-            src={article.featuredImage}
+            src={imageUrl(article.featuredImage)}
             alt={article.title}
             fill
             className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
@@ -155,7 +155,7 @@ export function SidebarCard({
       <div className="relative w-20 h-16 shrink-0 overflow-hidden rounded-sm bg-zinc-100">
         {article.featuredImage ? (
           <Image
-            src={article.featuredImage}
+            src={imageUrl(article.featuredImage)}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
