@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/utils";
+import { useToast } from "@/components/ui/toast";
 
 const Editor = dynamic(() => import("@/components/ui/editor"), { ssr: false });
 
@@ -54,6 +55,7 @@ export default function ArticleForm({
   );
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -70,11 +72,11 @@ export default function ArticleForm({
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("Invalid file type. Allowed: JPEG, PNG, WebP, GIF");
+      toast("Invalid file type. Allowed: JPEG, PNG, WebP, GIF", "error");
       return;
     }
     if (file.size > MAX_SIZE) {
-      alert("File too large. Maximum size is 5MB");
+      toast("File too large. Maximum size is 5MB", "error");
       return;
     }
 
@@ -94,7 +96,7 @@ export default function ArticleForm({
       const data = await res.json();
       setFeaturedImage(data.url);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to upload image");
+      toast(e instanceof Error ? e.message : "Failed to upload image", "error");
     } finally {
       setUploading(false);
     }
@@ -162,10 +164,11 @@ export default function ArticleForm({
 
       if (!res.ok) throw new Error("Failed to save");
 
+      toast(article ? "Article updated" : "Article created", "success");
       router.push("/cms/articles");
       router.refresh();
     } catch {
-      alert("Failed to save article");
+      toast("Failed to save article", "error");
     } finally {
       setSaving(false);
     }

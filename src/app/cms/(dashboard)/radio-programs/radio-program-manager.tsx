@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/components/ui/toast";
 
 type Program = {
   id: string;
@@ -49,6 +50,7 @@ export default function RadioProgramManager({
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const { toast } = useToast();
 
   function editProgram(p: Program) {
     setForm({
@@ -99,8 +101,9 @@ export default function RadioProgramManager({
       }
 
       resetForm();
+      toast(editingId ? "Program updated" : "Program added", "success");
     } catch {
-      alert("Failed to save program");
+      toast("Failed to save program", "error");
     } finally {
       setSaving(false);
     }

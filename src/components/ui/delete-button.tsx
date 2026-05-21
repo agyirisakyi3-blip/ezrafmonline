@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "@/components/ui/toast";
 
 export default function DeleteButton({ articleId }: { articleId: string }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
 
   const handleDelete = async () => {
     if (!confirm("Delete this article? This cannot be undone.")) return;
@@ -15,9 +17,10 @@ export default function DeleteButton({ articleId }: { articleId: string }) {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete");
+      toast("Article deleted", "success");
       router.refresh();
     } catch {
-      alert("Failed to delete article");
+      toast("Failed to delete article", "error");
     } finally {
       setDeleting(false);
     }

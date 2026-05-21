@@ -6,6 +6,7 @@ import ImageExtension from "@tiptap/extension-image";
 import LinkExtension from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEffect, useRef, useState } from "react";
+import { useToast } from "@/components/ui/toast";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -19,6 +20,7 @@ export default function Editor({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const { toast } = useToast();
 
   const editor = useEditor({
     extensions: [
@@ -52,11 +54,11 @@ export default function Editor({
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("Invalid file type. Allowed: JPEG, PNG, WebP, GIF");
+      toast("Invalid file type. Allowed: JPEG, PNG, WebP, GIF", "error");
       return;
     }
     if (file.size > MAX_SIZE) {
-      alert("File too large. Maximum size is 5MB");
+      toast("File too large. Maximum size is 5MB", "error");
       return;
     }
 
@@ -74,7 +76,7 @@ export default function Editor({
       const alt = window.prompt("Image description (alt text):");
       editor.chain().focus().setImage({ src: data.url, alt: alt || "" }).run();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to upload image");
+      toast(e instanceof Error ? e.message : "Failed to upload image", "error");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

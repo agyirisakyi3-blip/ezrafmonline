@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/toast";
 
 interface Category {
   id: string;
@@ -21,6 +22,7 @@ export default function CategoryManager({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -38,9 +40,10 @@ export default function CategoryManager({
 
       setName("");
       setDescription("");
+      toast("Category created", "success");
       router.refresh();
     } catch {
-      alert("Failed to create category");
+      toast("Failed to create category", "error");
     } finally {
       setSaving(false);
     }
